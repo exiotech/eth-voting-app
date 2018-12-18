@@ -1,7 +1,7 @@
 pragma solidity >=0.4.22 <0.6.0;
 
-/// @title Voting with delegation.
-contract Voting {
+/// @title Election with delegation.
+contract Election {
     // This declares a new complex type which will
     // be used for variables later.
     // It will represent a single voter.
@@ -13,9 +13,10 @@ contract Voting {
     }
 
     // This is a type for a single proposal.
-    struct Proposal {
-        bytes32 name;   // short name (up to 32 bytes)
-        uint voteCount; // number of accumulated votes
+    struct Candidate {
+      uint id;
+      string name;
+      uint voteCount;
     }
 
     address public chairperson;
@@ -24,27 +25,28 @@ contract Voting {
     // stores a `Voter` struct for each possible address.
     mapping(address => Voter) public voters;
 
-    // A dynamically-sized array of `Proposal` structs.
-    Proposal[] public proposals;
+    // stores a `Candidate` struct.
+    mapping(uint => Candidate) public candidates;
+
+    // Store Candidates Count
+    uint public candidatesCount;
+    uint public votersCount;
 
     /// Create a new ballot to choose one of `proposalNames`.
-    constructor(bytes32[] memory proposalNames) public {
+    constructor() public {
         chairperson = msg.sender;
         voters[chairperson].weight = 1;
+        votersCount++;
 
-        // For each of the provided proposal names,
-        // create a new proposal object and add it
-        // to the end of the array.
-        for (uint i = 0; i < proposalNames.length; i++) {
-            // `Proposal({...})` creates a temporary
-            // Proposal object and `proposals.push(...)`
-            // appends it to the end of `proposals`.
-            proposals.push(Proposal({
-                name: proposalNames[i],
-                voteCount: 0
-            }));
-        }
+        addCandidate("Candidate 1");
+        addCandidate("Candidate 2");
     }
+
+    function addCandidate (string _name) private {
+      candidatesCount++;
+      candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+    }
+
 
     // Give `voter` the right to vote on this ballot.
     // May only be called by `chairperson`.
@@ -102,7 +104,7 @@ contract Voting {
         if (delegate_.voted) {
             // If the delegate already voted,
             // directly add to the number of votes
-            proposals[delegate_.vote].voteCount += sender.weight;
+            candidates[delegate_.vote].voteCount += sender.weight;
         } else {
             // If the delegate did not vote yet,
             // add to her weight.
@@ -111,18 +113,20 @@ contract Voting {
     }
 
     /// Give your vote (including votes delegated to you)
-    /// to proposal `proposals[proposal].name`.
-    function vote(uint proposal) public {
+    /// to proposal `candidates[proposal].name`.
+    function vote(uint _candidateId) public {
         Voter storage sender = voters[msg.sender];
         require(sender.weight != 0, "Has no right to vote");
         require(!sender.voted, "Already voted.");
+        // require a valid candidate
+        require(_candidateId > 0 && _candidateId <= candidatesCount);
         sender.voted = true;
-        sender.vote = proposal;
+        sender.vote = _candidateId;
 
         // If `proposal` is out of the range of the array,
         // this will throw automatically and revert all
         // changes.
-        proposals[proposal].voteCount += sender.weight;
+        candidates[_candidateId].voteCount += sender.weight;
     }
 
     /// @dev Computes the winning proposal taking all
@@ -131,21 +135,20 @@ contract Voting {
             returns (uint winningProposal_)
     {
         uint winningVoteCount = 0;
-        for (uint p = 0; p < proposals.length; p++) {
-            if (proposals[p].voteCount > winningVoteCount) {
-                winningVoteCount = proposals[p].voteCount;
+        for (uint p = 1; p < candidatesCount; p++) {
+            if (candidates[p].voteCount > winningVoteCount) {
+                winningVoteCount = candidates[p].voteCount;
                 winningProposal_ = p;
             }
         }
     }
 
     // Calls winningProposal() function to get the index
-    // of the winner contained in the proposals array and then
+    // of the winner contained in the candidates array and then
     // returns the name of the winner
     function winnerName() public view
-            returns (bytes32 winnerName_)
+            returns (string winnerName_)
     {
-        winnerName_ = proposals[winningProposal()].name;
+        winnerName_ = candidates[winningProposal()].name;
     }
 }
-// address = '0x452ab6812401d53fe19d194a4bbda792ec8083f0'

@@ -7,7 +7,7 @@
 //   deployer.deploy(MetaCoin)
 // }
 
-var Voting = artifacts.require('./../Voting.sol')
+var Election = artifacts.require('./../Election.sol')
 module.exports = function (deployer) {
-  deployer.deploy(Voting, ['HHK', 'QO', 'HYD', 'QP', 'LH', 'BHK'], { gas: 6700000 })
+  deployer.deploy(Election, { gas: 6700000 })
 }
