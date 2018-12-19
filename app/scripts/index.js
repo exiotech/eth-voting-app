@@ -8,18 +8,18 @@ import { default as $ } from 'jquery'
 import { default as contract } from 'truffle-contract'
 
 /*
- * When you compile and deploy your Voting contract,
+ * When you compile and deploy your Election contract,
  * truffle stores the abi and deployed address in a json
  * file in the build directory. We will use this information
- * to setup a Voting abstraction. We will use this abstraction
- * later to create an instance of the Voting contract.
+ * to setup a Election abstraction. We will use this abstraction
+ * later to create an instance of the Election contract.
  * Compare this against the index.js from our previous tutorial to see the difference
  * https://gist.github.com/maheshmurthy/f6e96d6b3fff4cd4fa7f892de8a1a1b4#file-index-js
  */
 
-import votingArtifacts from '../../build/contracts/Voting.json'
+import ElectionArtifacts from '../../build/contracts/Election.json'
 
-var Voting = contract(votingArtifacts)
+var Election = contract(ElectionArtifacts)
 
 let candidates = {
   'HHK':'candidate-1',
@@ -38,11 +38,11 @@ window.voteForCandidate = function (candidate) {
     $('#msg').html('Vote has been submitted. The vote count will increment as soon as the vote is recorded on the blockchain. Please wait.')
     $('#candidate').val('')
 
-    /* Voting.deployed() returns an instance of the contract. Every call
+    /* Election.deployed() returns an instance of the contract. Every call
      * in Truffle returns a promise which is why we have used then()
      * everywhere we have a transaction call
      */
-    Voting.deployed().then(function (contractInstance) {
+    Election.deployed().then(function (contractInstance) {
       contractInstance.voteForCandidate(candidateName, { gas: 140000, from: account }).then(function () {
         let divId = candidates[candidateName]
         return contractInstance.totalVotesFor.call(candidateName).then(function (v) {
@@ -81,11 +81,11 @@ $(document).ready(function () {
     account = accs[0]
   })
 
-  Voting.setProvider(web3.currentProvider)
+  Election.setProvider(web3.currentProvider)
   let candidateNames = Object.keys(candidates)
   for (var i = 0; i < candidateNames.length; i++) {
     let name = candidateNames[i]
-    Voting.deployed().then(function (contractInstance) {
+    Election.deployed().then(function (contractInstance) {
       contractInstance.totalVotesFor.call(name).then(function (v) {
         $('#' + candidates[name]).html(v.toString())
       })

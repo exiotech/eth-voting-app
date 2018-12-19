@@ -31,12 +31,17 @@ contract Election {
     // Store Candidates Count
     uint public candidatesCount;
     uint public votersCount;
+    uint public duration;
+    uint private start;
+    uint private actionTime = now;
 
     /// Create a new ballot to choose one of `proposalNames`.
-    constructor() public {
+    constructor(uint _start, uint _duration) public {
         chairperson = msg.sender;
         voters[chairperson].weight = 1;
         votersCount++;
+        start = _start - actionTime;
+        duration = _duration;
 
         addCandidate("Candidate 1");
         addCandidate("Candidate 2");
@@ -120,6 +125,7 @@ contract Election {
         require(!sender.voted, "Already voted.");
         // require a valid candidate
         require(_candidateId > 0 && _candidateId <= candidatesCount);
+        require(now > (actionTime + start) && now < (actionTime + start + duration), 'Elections do not start yet or already finished');
         sender.voted = true;
         sender.vote = _candidateId;
 
@@ -131,24 +137,24 @@ contract Election {
 
     /// @dev Computes the winning proposal taking all
     /// previous votes into account.
-    function winningProposal() public view
-            returns (uint winningProposal_)
+    function winningCandidate() public view
+            returns (uint winningCandidate_)
     {
         uint winningVoteCount = 0;
         for (uint p = 1; p < candidatesCount; p++) {
             if (candidates[p].voteCount > winningVoteCount) {
                 winningVoteCount = candidates[p].voteCount;
-                winningProposal_ = p;
+                winningCandidate_ = p;
             }
         }
     }
 
-    // Calls winningProposal() function to get the index
+    // Calls winningCandidate() function to get the index
     // of the winner contained in the candidates array and then
     // returns the name of the winner
     function winnerName() public view
             returns (string winnerName_)
     {
-        winnerName_ = candidates[winningProposal()].name;
+        winnerName_ = candidates[winningCandidate()].name;
     }
 }
