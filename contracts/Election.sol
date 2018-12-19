@@ -141,10 +141,10 @@ contract Election {
             returns (uint winningCandidate_)
     {
         uint winningVoteCount = 0;
-        for (uint p = 1; p < candidatesCount; p++) {
-            if (candidates[p].voteCount > winningVoteCount) {
-                winningVoteCount = candidates[p].voteCount;
-                winningCandidate_ = p;
+        for (uint i = 1; i <= candidatesCount; i++) {
+            if (candidates[i].voteCount > winningVoteCount) {
+                winningVoteCount = candidates[i].voteCount;
+                winningCandidate_ = i;
             }
         }
     }
