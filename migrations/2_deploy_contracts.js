@@ -9,5 +9,5 @@
 
 var Election = artifacts.require('./../Election.sol')
 module.exports = function (deployer) {
-  deployer.deploy(Election, 1545324900, 20, { gas: 6700000 })
+  deployer.deploy(Election, { gas: 6700000 })
 }

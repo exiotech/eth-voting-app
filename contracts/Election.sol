@@ -31,24 +31,39 @@ contract Election {
 	// Store Candidates Count
 	uint public candidatesCount;
 	uint public votersCount;
-	uint public duration;
-	uint private start;
+	uint public votingDuration;
+	uint public votingStart;
+	uint public nominationStart;
+	uint public nominationDuration;
 	uint private actionTime = now;
 
 	/// Create a new ballot to choose one of `proposalNames`.
-	constructor(uint _start, uint _duration) public {
+	constructor() public {
 		chairperson = msg.sender;
 		voters[chairperson].weight = 1;
 		votersCount++;
-		start = _start - actionTime;
-		duration = _duration;
 	}
 
-	function addCandidate (string _name) public {
+	modifier onlyChairperson {
 		require(
 			msg.sender == chairperson,
-			"Only chairperson can add candidate."
+			"Only chairperson can call this function"
 		);
+		_;
+	}
+
+	function nominationPeriod(uint _start, uint _duration) public onlyChairperson {
+		nominationStart = _start - actionTime;
+		nominationDuration = _duration;
+	}
+
+	function votingPeriod(uint _start, uint _duration) public onlyChairperson {
+		votingStart = _start - actionTime;
+		votingDuration = _duration;
+	}
+
+	function addCandidate (string _name) public onlyChairperson {
+		require(now > (actionTime + nominationStart) && now < (actionTime + nominationStart + nominationDuration), 'Nomination do not start yet or already finished');
 		candidatesCount++;
 		candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
 	}
@@ -125,7 +140,7 @@ contract Election {
 		require(!sender.voted, "Already voted.");
 		// require a valid candidate
 		require(_candidateId > 0 && _candidateId <= candidatesCount);
-		require(now > (actionTime + start) && now < (actionTime + start + duration), 'Elections do not start yet or already finished');
+		require(now > (actionTime + votingStart) && now < (actionTime + votingStart + votingDuration), 'Elections do not start yet or already finished');
 		sender.voted = true;
 		sender.vote = _candidateId;
 
