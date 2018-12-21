@@ -38,8 +38,8 @@ contract Election {
 	uint private actionTime = now;
 
 	/// Create a new ballot to choose one of `proposalNames`.
-	constructor() public {
-		chairperson = msg.sender;
+	constructor(address _chairperson) public {
+		chairperson = _chairperson;
 		voters[chairperson].weight = 1;
 		votersCount++;
 	}
@@ -47,17 +47,17 @@ contract Election {
 	modifier onlyChairperson {
 		require(
 			msg.sender == chairperson,
-			"Only chairperson can call this function"
+			"Only chairperson can call"
 		);
 		_;
 	}
 
-	function nominationPeriod(uint _start, uint _duration) public onlyChairperson {
+	function nominationPeriod(uint _start, uint _duration) external {
 		nominationStart = _start - actionTime;
 		nominationDuration = _duration;
 	}
 
-	function votingPeriod(uint _start, uint _duration) public onlyChairperson {
+	function votingPeriod(uint _start, uint _duration) external {
 		votingStart = _start - actionTime;
 		votingDuration = _duration;
 	}
