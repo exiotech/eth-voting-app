@@ -35,13 +35,15 @@ contract Election {
 	uint public votingStart;
 	uint public nominationStart;
 	uint public nominationDuration;
+	string public name;
 	uint private actionTime = now;
 
 	/// Create a new ballot to choose one of `proposalNames`.
-	constructor(address _chairperson) public {
+	constructor(address _chairperson, string _name) public {
 		chairperson = _chairperson;
 		voters[chairperson].weight = 1;
 		votersCount++;
+		name = _name;
 	}
 
 	modifier onlyChairperson {
