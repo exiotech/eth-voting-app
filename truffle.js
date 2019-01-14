@@ -2,9 +2,10 @@
 require('babel-register')
 
 module.exports = {
-  compiler: {
-    version: '0.4.25',
-    optimization: false
+  compilers: {
+    solc: {
+      version: '0.5.2'
+    }
   },
   networks: {
     rinkeby: {
