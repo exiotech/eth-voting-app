@@ -104,4 +104,25 @@ contract('Election', (accounts) => {
       assert(error.message.toString().indexOf('revert') >= 0, 'should return error if nomination already done')
     })
   })
+
+  it('should give right to vote', () => {
+    return election.giveRightToVote(accounts[1], { from: accounts[1] }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('revert') >= 0, 'only chairperson can call this function')
+      return election.giveRightToVote(accounts[1])
+    }).then(receipt => {
+      return election.voters(accounts[1])
+    }).then(voter => {
+      assert.equal(voter[0], 1, 'weight should be equal 1')
+      return sleep((votingStart - time - 4) * 1000)
+    }).then(() => {
+      return election.vote(1, { from: accounts[1] })
+    }).then(receipt => {
+      return election.giveRightToVote.call(accounts[1])
+    }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('revert') >= 0, 'voter already voted')
+      return election.giveRightToVote.call(accounts[0])
+    }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('revert') >= 0, 'voter have right to vote')
+    })
+  })
 })
