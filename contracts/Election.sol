@@ -44,10 +44,8 @@ contract Election {
 	}
 
 	modifier onlyWhileOpenElection() {
-		require(
-			now > (actionTime + votingStart) && now < (actionTime + votingStart + votingDuration),
-			'Elections do not start yet or already finished'
-		);
+		require(now >= (actionTime + votingStart), 'Elections do not start yet');
+		require(now <= (actionTime + votingStart + votingDuration), 'Elections already finished');
 		_;
 	}
 
