@@ -10,10 +10,10 @@ contract('Election', (accounts) => {
   let election
   let election1name = 'Election 1'
   let time = Math.floor((new Date()).getTime() / 1000)
-  let nominationStart = time + 10
-  let nominationEnd = time + 20
-  let votingStart = time + 25
-  let votingEnd = time + 35
+  let nominationStart = time + 5
+  let nominationEnd = time + 10
+  let votingStart = time + 12
+  let votingEnd = time + 17
   let candidate1 = 'Candidate 1'
   // let candidate2 = 'Candidate 2'
   let wait
@@ -124,7 +124,6 @@ contract('Election', (accounts) => {
       return election.nominationPeriod(nominationStart, nominationEnd)
     }).then(receipt => {
       wait = (receipt.logs[0].args._start.toNumber() - time + 2) * 1000
-    }).then(() => {
       return election.addCandidate(candidate1, { from: accounts[0] })
     }).then(assert.fail).catch(error => {
       assert(error.message.toString().indexOf('Do not start yet') >= 0, 'nomination do not start yet 2')
@@ -157,10 +156,10 @@ contract('Election', (accounts) => {
 
   it('should give right to vote', () => {
     time = Math.floor((new Date()).getTime() / 1000)
-    nominationStart = time + 10
-    nominationEnd = time + 20
-    votingStart = time + 25
-    votingEnd = time + 35
+    nominationStart = time + 2
+    nominationEnd = time + 5
+    votingStart = time + 7
+    votingEnd = time + 10
     return Chairperson.deployed().then(instance => {
       chairperson = instance
       return chairperson.callElection(election1name)
@@ -180,16 +179,12 @@ contract('Election', (accounts) => {
     }).then(receipt => {
       wait = (receipt.logs[0].args._start.toNumber() - time + 2) * 1000
       return election.votingPeriod(votingStart, votingEnd)
-    }).then(() => {
-      return election.votingStart()
-    }).then(start => {
-      return election.votingEnd()
-    }).then(end => {
+    }).then(receipt => {
       return sleep(wait)
     }).then(receipt => {
       return election.addCandidate(candidate1)
     }).then(receipt => {
-      return sleep(wait + 5000)
+      return sleep(wait + 2000)
     }).then(() => {
       return election.vote(1, { from: accounts[0] })
     }).then(receipt => {
@@ -208,6 +203,68 @@ contract('Election', (accounts) => {
       return election.voters(accounts[1])
     }).then(voter => {
       assert.equal(voter[0].toNumber(), 1, 'voter weigt should be 1')
+    })
+  })
+
+  it('vote', () => {
+    time = Math.floor((new Date()).getTime() / 1000)
+    nominationStart = time + 5
+    nominationEnd = time + 10
+    votingStart = time + 12
+    votingEnd = time + 17
+    return Chairperson.deployed().then(instance => {
+      chairperson = instance
+      return chairperson.callElection(election1name)
+    }).then(receipt => {
+      return chairperson.elections(1)
+    }).then(election => {
+      return Election.at(election[2])
+    }).then(instance => {
+      election = instance
+      return election.nominationPeriod(nominationStart, nominationEnd)
+    }).then(receipt => {
+      wait = (receipt.logs[0].args._start.toNumber() - time + 2) * 1000
+      return election.votingPeriod(votingStart, votingEnd)
+    }).then(() => {
+      return sleep(wait)
+    }).then(receipt => {
+      return election.addCandidate(candidate1)
+    }).then(receipt => {
+      return election.vote(1, { from: accounts[0] })
+    }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('Do not start yet') >= 0, 'voting do not start yet')
+      return sleep(wait + 2000)
+    }).then(() => {
+      return election.vote(1, { from: accounts[1] })
+    }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('Has no right to vote') >= 0, 'Has no right to vote')
+      return election.vote(0, { from: accounts[0] })
+    }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('does not exist candidate by given id') >= 0, 'does not exist candidate by given id')
+      return election.vote.call(1, { from: accounts[0] })
+    }).then(success => {
+      assert.equal(success, true, 'success should be true')
+      return election.vote(1, { from: accounts[0] })
+    }).then(receipt => {
+      assert.equal(receipt.logs.length, 1, 'triggers one event')
+      assert.equal(receipt.logs[0].event, 'voteFor', 'should be the "voteFor" event')
+      assert.equal(receipt.logs[0].args._address, accounts[0], 'logs the address of voter')
+      assert.equal(receipt.logs[0].args._candidateId.toNumber(), 1, 'logs the id of candidate')
+      return election.voters(accounts[0])
+    }).then(voter => {
+      assert.equal(voter[1], true, 'voter.voted should be true')
+      assert.equal(voter[3].toNumber(), 1, 'voter.vote should be 1')
+      return election.candidates(1)
+    }).then(candidate => {
+      assert.equal(candidate[2].toNumber(), 1, 'candidate.voteCount should be 1')
+      return election.vote(1, { from: accounts[0] })
+    }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('Already voted.') >= 0, 'Already voted.')
+      return sleep(wait)
+    }).then(() => {
+      return election.vote(1, { from: accounts[0] })
+    }).then(assert.fail).catch(error => {
+      assert(error.message.toString().indexOf('Already finished') >= 0, 'Already finished')
     })
   })
 })

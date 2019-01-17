@@ -32,6 +32,7 @@ contract Election {
 	event Voting(uint _start, uint _end);
 	event CandidateCreated(uint _id, string _name);
 	event givePermission(address _address);
+	event voteFor(address _address, uint _candidateId);
 
 	constructor(address _chairperson, string memory _name) public {
 		chairperson = _chairperson;
@@ -48,12 +49,6 @@ contract Election {
 	modifier inTime(uint _start, uint _end) {
 		require(now >= _start, 'Do not start yet');
 		require(now <= _end, 'Already finished');
-		_;
-	}
-
-	modifier onlyWhileOpenElection() {
-		require(now >= (actionTime + votingStart), 'Elections do not start yet');
-		require(now <= (actionTime + votingStart + votingEnd), 'Elections already finished');
 		_;
 	}
 
@@ -121,15 +116,19 @@ contract Election {
 		}
 	}
 
-	function vote(uint _candidateId) public inTime(votingStart, votingEnd) {
+	function vote(uint _candidateId) public inTime(votingStart, votingEnd) returns(bool success) {
 		Voter storage sender = voters[msg.sender];
-		require(sender.weight != 0, "Has no right to vote");
-		require(!sender.voted, "Already voted.");
-		require(_candidateId > 0 && _candidateId <= candidatesCount);
+		require(sender.weight != 0, 'Has no right to vote');
+		require(!sender.voted, 'Already voted.');
+		require(_candidateId > 0 && _candidateId <= candidatesCount, 'does not exist candidate by given id');
+
 		sender.voted = true;
 		sender.vote = _candidateId;
-
 		candidates[_candidateId].voteCount += sender.weight;
+
+		emit voteFor(msg.sender, _candidateId);
+
+		return true;
 	}
 
 	function winningCandidate() public view returns (uint winningCandidate_) {
