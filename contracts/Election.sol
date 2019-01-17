@@ -117,14 +117,13 @@ contract Election {
 	}
 
 	function vote(uint _candidateId) public inTime(votingStart, votingEnd) returns(bool success) {
-		Voter storage sender = voters[msg.sender];
-		require(sender.weight != 0, 'Has no right to vote');
-		require(!sender.voted, 'Already voted.');
+		require(voters[msg.sender].weight != 0, 'Has no right to vote');
+		require(!voters[msg.sender].voted, 'Already voted.');
 		require(_candidateId > 0 && _candidateId <= candidatesCount, 'does not exist candidate by given id');
 
-		sender.voted = true;
-		sender.vote = _candidateId;
-		candidates[_candidateId].voteCount += sender.weight;
+		voters[msg.sender].voted = true;
+		voters[msg.sender].vote = _candidateId;
+		candidates[_candidateId].voteCount += voters[msg.sender].weight;
 
 		emit voteFor(msg.sender, _candidateId);
 

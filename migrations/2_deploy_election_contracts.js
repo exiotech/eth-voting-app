@@ -7,8 +7,8 @@
 //   deployer.deploy(MetaCoin)
 // }
 
-var Election = artifacts.require('./../Chairperson.sol')
+var Chairperson = artifacts.require('./../Chairperson.sol')
 
 module.exports = function (deployer) {
-  deployer.deploy(Election)
+  deployer.deploy(Chairperson)
 }
