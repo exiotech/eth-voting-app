@@ -1,142 +1,135 @@
-pragma solidity >=0.4.22 <0.6.0;
+pragma solidity ^0.5.2;
 
-/// @title Election with delegation.
 contract Election {
-	// This declares a new complex type which will
-	// be used for variables later.
-	// It will represent a single voter.
 	struct Voter {
-		uint weight; // weight is accumulated by delegation
-		bool voted;  // if true, that person already voted
-		address delegate; // person delegated to
-		uint vote;   // index of the voted proposal
+		uint weight;
+		bool voted;
+		address delegate;
+		uint vote;
 	}
 
-	// This is a type for a single proposal.
 	struct Candidate {
 		uint id;
 		string name;
 		uint voteCount;
 	}
 
-	address public chairperson;
-
-	// This declares a state variable that
-	// stores a `Voter` struct for each possible address.
 	mapping(address => Voter) public voters;
-
-	// stores a `Candidate` struct.
 	mapping(uint => Candidate) public candidates;
 
-	// Store Candidates Count
+	address public chairperson;
 	uint public candidatesCount;
 	uint public votersCount;
-	uint public duration;
-	uint private start;
+	uint public nominationStart;
+	uint public nominationEnd;
+	uint public votingStart;
+	uint public votingEnd;
+	string public name;
+
 	uint private actionTime = now;
 
-	/// Create a new ballot to choose one of `proposalNames`.
-	constructor(uint _start, uint _duration) public {
-		chairperson = msg.sender;
+	event Nomination(uint _start, uint _end);
+	event Voting(uint _start, uint _end);
+	event CandidateCreated(uint _id, string _name);
+	event givePermission(address _address);
+	event voteFor(address _address, uint _candidateId);
+
+	constructor(address _chairperson, string memory _name) public {
+		chairperson = _chairperson;
 		voters[chairperson].weight = 1;
 		votersCount++;
-		start = _start - actionTime;
-		duration = _duration;
+		name = _name;
 	}
 
-	function addCandidate (string _name) public {
-		require(
-			msg.sender == chairperson,
-			"Only chairperson can add candidate."
-		);
+	modifier onlyChairperson {
+		require(msg.sender == chairperson, 'Only chairperson can call');
+		_;
+	}
+
+	modifier inTime(uint _start, uint _end) {
+		require(now >= _start, 'Do not start yet');
+		require(now <= _end, 'Already finished');
+		_;
+	}
+
+	function nominationPeriod(uint _start, uint _end) public returns(bool success) {
+		require(_start > now, 'start time should be greater then current time');
+
+		nominationStart = _start;
+		nominationEnd = _end;
+
+		emit Nomination(_start, _end);
+
+		return true;
+	}
+
+	function votingPeriod(uint _start, uint _end) public returns(bool success) {
+		require(_start > nominationEnd, 'start time should be greater then nominationEnd time');
+
+		votingStart = _start;
+		votingEnd = _end;
+
+		emit Voting(_start, _end);
+
+		return true;
+	}
+
+	function addCandidate (string memory _name) public onlyChairperson inTime(nominationStart, nominationEnd) returns(bool success) {
 		candidatesCount++;
 		candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+
+		emit CandidateCreated(candidatesCount, _name);
+
+		return true;
 	}
 
-	// Give `voter` the right to vote on this ballot.
-	// May only be called by `chairperson`.
-	function giveRightToVote(address voter) public {
-		// If the first argument of `require` evaluates
-		// to `false`, execution terminates and all
-		// changes to the state and to Ether balances
-		// are reverted.
-		// This used to consume all gas in old EVM versions, but
-		// not anymore.
-		// It is often a good idea to use `require` to check if
-		// functions are called correctly.
-		// As a second argument, you can also provide an
-		// explanation about what went wrong.
-		require(
-			msg.sender == chairperson,
-			"Only chairperson can give right to vote."
-		);
-		require(
-			!voters[voter].voted,
-			"The voter already voted."
-		);
+	function giveRightToVote(address voter) public onlyChairperson returns(bool success) {
+		require(!voters[voter].voted,	"The voter already voted.");
 		require(voters[voter].weight == 0);
+
 		voters[voter].weight = 1;
+
+		emit givePermission(voter);
+
+		return true;
 	}
 
-	/// Delegate your vote to the voter `to`.
 	function delegate(address to) public {
-		// assigns reference
 		Voter storage sender = voters[msg.sender];
 		require(!sender.voted, "You already voted.");
 
 		require(to != msg.sender, "Self-delegation is disallowed.");
 
-		// Forward the delegation as long as
-		// `to` also delegated.
-		// In general, such loops are very dangerous,
-		// because if they run too long, they might
-		// need more gas than is available in a block.
-		// In this case, the delegation will not be executed,
-		// but in other situations, such loops might
-		// cause a contract to get "stuck" completely.
 		while (voters[to].delegate != address(0)) {
 			to = voters[to].delegate;
 
-			// We found a loop in the delegation, not allowed.
 			require(to != msg.sender, "Found loop in delegation.");
 		}
 
-		// Since `sender` is a reference, this
-		// modifies `voters[msg.sender].voted`
 		sender.voted = true;
 		sender.delegate = to;
 		Voter storage delegate_ = voters[to];
 		if (delegate_.voted) {
-			// If the delegate already voted,
-			// directly add to the number of votes
 			candidates[delegate_.vote].voteCount += sender.weight;
 		} else {
-			// If the delegate did not vote yet,
-			// add to her weight.
 			delegate_.weight += sender.weight;
 		}
 	}
 
-	/// Give your vote (including votes delegated to you)
-	/// to proposal `candidates[proposal].name`.
-	function vote(uint _candidateId) public {
-		Voter storage sender = voters[msg.sender];
-		require(sender.weight != 0, "Has no right to vote");
-		require(!sender.voted, "Already voted.");
-		// require a valid candidate
-		require(_candidateId > 0 && _candidateId <= candidatesCount);
-		require(now > (actionTime + start) && now < (actionTime + start + duration), 'Elections do not start yet or already finished');
-		sender.voted = true;
-		sender.vote = _candidateId;
+	function vote(uint _candidateId) public inTime(votingStart, votingEnd) returns(bool success) {
+		require(voters[msg.sender].weight != 0, 'Has no right to vote');
+		require(!voters[msg.sender].voted, 'Already voted.');
+		require(_candidateId > 0 && _candidateId <= candidatesCount, 'does not exist candidate by given id');
 
-		// If `proposal` is out of the range of the array,
-		// this will throw automatically and revert all
-		// changes.
-		candidates[_candidateId].voteCount += sender.weight;
+		voters[msg.sender].voted = true;
+		voters[msg.sender].vote = _candidateId;
+		candidates[_candidateId].voteCount += voters[msg.sender].weight;
+
+		emit voteFor(msg.sender, _candidateId);
+
+		return true;
 	}
 
-	/// @dev Computes the winning proposal taking all
-	/// previous votes into account.
 	function winningCandidate() public view returns (uint winningCandidate_) {
 		uint winningVoteCount = 0;
 		for (uint i = 1; i <= candidatesCount; i++) {
@@ -147,10 +140,7 @@ contract Election {
 		}
 	}
 
-	// Calls winningCandidate() function to get the index
-	// of the winner contained in the candidates array and then
-	// returns the name of the winner
-	function winnerName() public view returns (string winnerName_) {
+	function winnerName() public view returns (string memory winnerName_) {
 		winnerName_ = candidates[winningCandidate()].name;
 	}
 }
