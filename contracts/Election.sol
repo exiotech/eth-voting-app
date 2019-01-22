@@ -14,19 +14,25 @@ contract Election {
 		uint voteCount;
 	}
 
-	address public chairperson;
-
 	mapping(address => Voter) public voters;
 	mapping(uint => Candidate) public candidates;
 
+	address public chairperson;
 	uint public candidatesCount;
 	uint public votersCount;
-	uint public votingDuration;
-	uint public votingStart;
 	uint public nominationStart;
-	uint public nominationDuration;
+	uint public nominationEnd;
+	uint public votingStart;
+	uint public votingEnd;
 	string public name;
+
 	uint private actionTime = now;
+
+	event Nomination(uint _start, uint _end);
+	event Voting(uint _start, uint _end);
+	event CandidateCreated(uint _id, string _name);
+	event givePermission(address _address);
+	event voteFor(address _address, uint _candidateId);
 
 	constructor(address _chairperson, string memory _name) public {
 		chairperson = _chairperson;
@@ -36,46 +42,56 @@ contract Election {
 	}
 
 	modifier onlyChairperson {
-		require(
-			msg.sender == chairperson,
-			"Only chairperson can call"
-		);
+		require(msg.sender == chairperson, 'Only chairperson can call');
 		_;
 	}
 
-	modifier onlyWhileOpenElection() {
-		require(now >= (actionTime + votingStart), 'Elections do not start yet');
-		require(now <= (actionTime + votingStart + votingDuration), 'Elections already finished');
+	modifier inTime(uint _start, uint _end) {
+		require(now >= _start, 'Do not start yet');
+		require(now <= _end, 'Already finished');
 		_;
 	}
 
-	function nominationPeriod(uint _start, uint _duration) external {
-		nominationStart = _start - actionTime;
-		nominationDuration = _duration;
+	function nominationPeriod(uint _start, uint _end) public returns(bool success) {
+		require(_start > now, 'start time should be greater then current time');
+
+		nominationStart = _start;
+		nominationEnd = _end;
+
+		emit Nomination(_start, _end);
+
+		return true;
 	}
 
-	function votingPeriod(uint _start, uint _duration) external {
-		votingStart = _start - actionTime;
-		votingDuration = _duration;
+	function votingPeriod(uint _start, uint _end) public returns(bool success) {
+		require(_start > nominationEnd, 'start time should be greater then nominationEnd time');
+
+		votingStart = _start;
+		votingEnd = _end;
+
+		emit Voting(_start, _end);
+
+		return true;
 	}
 
-	function addCandidate (string memory _name) public onlyChairperson {
-		require(now > (actionTime + nominationStart) && now < (actionTime + nominationStart + nominationDuration), 'Nomination do not start yet or already finished');
+	function addCandidate (string memory _name) public onlyChairperson inTime(nominationStart, nominationEnd) returns(bool success) {
 		candidatesCount++;
 		candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+
+		emit CandidateCreated(candidatesCount, _name);
+
+		return true;
 	}
 
-	function giveRightToVote(address voter) public {
-		require(
-			msg.sender == chairperson,
-			"Only chairperson can give right to vote."
-		);
-		require(
-			!voters[voter].voted,
-			"The voter already voted."
-		);
+	function giveRightToVote(address voter) public onlyChairperson returns(bool success) {
+		require(!voters[voter].voted,	"The voter already voted.");
 		require(voters[voter].weight == 0);
+
 		voters[voter].weight = 1;
+
+		emit givePermission(voter);
+
+		return true;
 	}
 
 	function delegate(address to) public {
@@ -100,15 +116,18 @@ contract Election {
 		}
 	}
 
-	function vote(uint _candidateId) public onlyWhileOpenElection {
-		Voter storage sender = voters[msg.sender];
-		require(sender.weight != 0, "Has no right to vote");
-		require(!sender.voted, "Already voted.");
-		require(_candidateId > 0 && _candidateId <= candidatesCount);
-		sender.voted = true;
-		sender.vote = _candidateId;
+	function vote(uint _candidateId) public inTime(votingStart, votingEnd) returns(bool success) {
+		require(voters[msg.sender].weight != 0, 'Has no right to vote');
+		require(!voters[msg.sender].voted, 'Already voted.');
+		require(_candidateId > 0 && _candidateId <= candidatesCount, 'does not exist candidate by given id');
 
-		candidates[_candidateId].voteCount += sender.weight;
+		voters[msg.sender].voted = true;
+		voters[msg.sender].vote = _candidateId;
+		candidates[_candidateId].voteCount += voters[msg.sender].weight;
+
+		emit voteFor(msg.sender, _candidateId);
+
+		return true;
 	}
 
 	function winningCandidate() public view returns (uint winningCandidate_) {
