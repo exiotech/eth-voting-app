@@ -1,10 +1,17 @@
 <template>
   <div>
-    <nuxt/>
+    <main
+      role="main"
+      class="container">
+      <div class="p-3 mb-2 bg-gradient-light text-dark">
+        <nuxt/>
+      </div>
+    </main>
   </div>
 </template>
 
-<style>
+<style lang="scss">
+@import 'assets/style.scss';
 html {
   font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, sans-serif;

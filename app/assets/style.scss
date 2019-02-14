@@ -1,0 +1,21 @@
+@import "~bootstrap/scss/bootstrap";
+
+form {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.form-control {
+  margin-left: 0.1em;
+  width: 100px;
+  height: auto;
+}
+.form-control:invalid{
+  border-color: red;
+}
+
+.candidate_select{
+  margin-left: 3em;
+  width: 250px;
+  height: 38px;
+}
