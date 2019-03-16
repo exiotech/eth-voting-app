@@ -25,7 +25,6 @@ export default function nominationPeriodPlagin(web3) {
                       }
                     });
                   }, 1000)
-                  console.log(event);
                 })
               }
             })
