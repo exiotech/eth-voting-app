@@ -1,9 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-vue/src/index.scss";
 
-form {
-  max-width: 500px;
-  margin: 0 auto;
-}
+// form {transform: scale(1.5);
+//   max-width: 500px;
+//   margin: 0 auto;
+// }
 
 .form-control {
   margin-left: 0.1em;
@@ -15,7 +16,17 @@ form {
 }
 
 .candidate_select{
-  margin-left: 3em;
+  margin-left: 17em;
+  margin-right: 0;
   width: 250px;
-  height: 38px;
+  height: 36px;
+}
+.title-election{
+  margin-bottom: 7em;
+}
+.mx-auto{
+  transform: scale(1.5);
+  max-width: 500px;
+  margin: 0 auto;
+  width: 70%;
 }

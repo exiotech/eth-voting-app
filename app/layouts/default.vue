@@ -1,10 +1,25 @@
 <template>
   <div>
+    <div
+      class="btn-group mr-2"
+      role="group"
+      aria-label="First group">
+      <button
+        type="button"
+        class="btn btn-outline-info text-left"><nuxt-link to="/elections">elections</nuxt-link></button>
+      <button
+        type="button"
+        class="btn btn-outline-info text-left"><nuxt-link to="/elections/election">election</nuxt-link></button>
+      <button
+        type="button"
+        class="btn btn-outline-info text-left"><nuxt-link to="/elections/voting">voting</nuxt-link></button>
+    </div>
     <main
       role="main"
       class="container">
       <div class="p-3 mb-2 bg-gradient-light text-dark">
         <nuxt/>
+
       </div>
     </main>
   </div>

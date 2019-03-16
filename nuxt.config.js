@@ -1,7 +1,11 @@
 const pkg = require('./package')
-
+require('dotenv').config();
+const routerBase = process.env.DEPLOY_ENV === 'GH_PAGES' ? '/vue-paper-dashboard-nuxt/' : '/';
 module.exports = {
   mode: 'universal',
+
+
+
 
   /*
   ** Headers of the page
@@ -40,14 +44,17 @@ module.exports = {
   */
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/dotenv',
     '@exio.tech/nuxt-web3',
+    'bootstrap-vue/nuxt'
   ],
   /*
   ** Axios module configuration
   */
   axios: {
-    // See https://github.com/nuxt-community/axios-module#options
-  },
+     // See https://github.com/nuxt-community/axios-module#options
+     // baseURL: process.env.API_URL,
+   },
 
   /*
   ** Build configuration
@@ -57,6 +64,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
+       config.node = { fs: 'empty' };
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({

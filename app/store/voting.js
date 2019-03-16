@@ -1,33 +1,7 @@
-
-
 export const  state = () => ({
-    candidates:[
-      {
-        id: 1,
-        name: 'Dakota Rice',
-        kargaxos: 'kargaxos1',
-      },
-      {
-        id: 2,
-        name: 'Minerva Hooper',
-        kargaxos: 'kargaxos2',
-      },
-      {
-        id: 3,
-        name: 'Sage Rodriguez',
-        kargaxos: 'kargaxos3',
-      },
-      {
-        id: 4,
-        name: 'Philip Chaney',
-        kargaxos: 'kargaxos4',
-      },
-      {
-        id: 5,
-        name: 'Doris Greene',
-        kargaxos: 'kargaxos5',
-      }
-    ],
+    candidates: [],
+    candidateName: [],
+    candidateID: 0,
     isOpen: true,
   });
 
@@ -36,9 +10,41 @@ export const  state = () => ({
     isOpen: (state) => state.isOpen,
   };
 
+  export const  actions = {
+    addCandidateName({commit}, candidateName){
+      commit('ADD_CANDIDATE_NAME', candidateName)
+    },
+    getCandidate ({commit}, candidateName) {
+      commit('SET_CANDIDATE', candidateName);
+    },
+    addCandidate({commit}){
+      commit('ADD_CANDIDATE')
+    },
+    vote({commit}, candidateID){
+      commit('SET_VOTE', candidateID)
+    }
+  };
+
   export const mutations = {
+    ADD_CANDIDATE_NAME(state, candidateName){
+      state.candidateName.push(candidateName)
+    },
+    SET_CANDIDATE(state,candidates){
+      state.candidates = candidates
+    },
+    ADD_CANDIDATE(state){
+      state.candidates = []
+      // window.localStorage.clear();
+      let tmp = this;
+      Object.keys(window.localStorage).forEach(function(value){
+        if(JSON.parse(window.localStorage.getItem(value)).name == tmp.$router.history.current.params.name){
+          state.candidates = JSON.parse(window.localStorage.getItem(value)).candidate;
+        }
+      })
+    },
+    SET_VOTE(state, candidateID){
+      state.candidateID = candidateID
+    }
+
 
   };
-  export const  actions = {
-
-  }

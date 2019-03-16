@@ -1,9 +1,9 @@
-
 export default function createWeb3Plugin (web3) {
   return (store) => {
     let address = null;
     if (typeof window !== 'undefined') {
       window.ethereum.enable();
+
       setInterval(() => {
         web3.eth.getCoinbase().then((newAddress) => {
           if (address !== newAddress) {
@@ -20,4 +20,4 @@ export default function createWeb3Plugin (web3) {
       }, 300);
     }
   };
-}
+};
