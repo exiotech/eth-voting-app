@@ -61,13 +61,12 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex'
-
+  import { mapGetters, mapActions } from 'vuex';
 
   export default {
     data () {
       return {
-        name: '',
+        name: "",
       };
     },
     computed: {
@@ -89,19 +88,19 @@
         getElection: 'elections/getElection',
       }),
       clearName() {
-        this.name = ''
+        this.name = "";
       },
       handleOk(evt) {
-        evt.preventDefault()
+        evt.preventDefault();
         if (!this.name) {
-          alert('Please enter your election')
+          alert('Please enter your election');
         } else {
-          this.handleSubmit()
+          this.handleSubmit();
         }
       },
       handleSubmit() {
         this.addElectionName(this.name).then(()=>{
-          this.name = ''
+          this.name = "";
         });
         this.$refs.modal.hide();
         if(this.election){
@@ -111,7 +110,7 @@
           this.$router.push(`Elections/Election/${ 1 }`);
       },
       handleCancel(){
-          this.$refs.modal.hide()
+        this.$refs.modal.hide();
       }
     },
 

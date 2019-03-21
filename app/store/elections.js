@@ -3,17 +3,16 @@ export const  state = () => ({
      electionName: [],
   });
 
-
   export const getters = {
     elections: (state) => state.elections,
   };
 
   export const actions = {
     addElectionName({commit}, electionName){
-      commit('ADD_ELECTION_NAME', electionName)
+      commit('ADD_ELECTION_NAME', electionName);
     },
     async getElection ({ commit }) {
-        commit('GET_ELECTION')
+      commit('GET_ELECTION');
    }
   };
 
@@ -32,9 +31,9 @@ export const  state = () => ({
       }
     },
     SET_ELECTION_NAME(state, electionName){
-      state.electionName = electionName
+      state.electionName = electionName;
     },
     ADD_ELECTION_NAME(state, electionName){
-      state.electionName.push(electionName)
+      state.electionName.push(electionName);
     }
   }

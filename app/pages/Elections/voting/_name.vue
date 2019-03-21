@@ -110,14 +110,15 @@
 <script>
 import { mapGetters, mapMutations, mapActions } from 'vuex';
 
+
 export default {
   data () {
     return {
       selectedCandidateId: 0,
-      timerCandidate: '',
-      timerVoting: '',
-      candidateName: '',
-      kargaxos: '',
+      timerCandidate: "",
+      timerVoting: "",
+      candidateName: "",
+      kargaxos: "",
       isLoading: false,
       startTimeAddCandidate: false,
       timeAddCandidate: false,
@@ -136,42 +137,42 @@ export default {
     this.addCandidate();
     this.addCandidateTimer();
     this.votingTimer();
+    // this.winnerName();
   },
   methods: {
     ...mapActions({
       addCandidate: 'voting/addCandidate',
       addCandidateName: 'voting/addCandidateName',
-      vote: 'voting/vote'
+      vote: 'voting/vote',
     }),
     clearName(){
-      this.candidateName = '';
-      this.kargaxos = ''
+      this.candidateName = "";
+      this.kargaxos = "";
     },
     submit(){
       this.isLoading = true;
       this.vote(this.selectedCandidateId);
     },
     handleOk(evt) {
-
-      evt.preventDefault()
+      evt.preventDefault();
       if (!this.candidateName && !this.kargaxos) {
-        alert('Please enter your name and kargaxos')
+        alert('Please enter your name and kargaxos');
       } else {
-        this.handleSubmit()
+        this.handleSubmit();
       }
     },
     handleSubmit() {
       this.addCandidateName(this.candidateName).then(()=>{
-        this.candidateName = '';
-        this.kargaxos = ''
+        this.candidateName = "";
+        this.kargaxos = "";
       })
-      this.$refs.modal.hide()
+      this.$refs.modal.hide();
     },
     handleCancel(){
-        this.$refs.modal.hide()
+        this.$refs.modal.hide();
     },
     pad2: function (number) {
-      return (number < 10 ? '0' : '') + number
+      return (number < 10 ? '0' : '') + number;
     },
     convertTime: function (rangeTime){
       let seconds = parseInt(rangeTime, 10);
@@ -216,10 +217,9 @@ export default {
           }
           else {
             this.startTimeAddCandidate = true;
-            this.timerCandidate = this.convertTime(rangeTimeStartAddCandidate)
+            this.timerCandidate = this.convertTime(rangeTimeStartAddCandidate);
             rangeTimeStartAddCandidate -= 1;
           }
-
         }, 1000)
       }
     },
@@ -243,7 +243,6 @@ export default {
         rangeTimeVoting = timeVoting - timeStartVoting;
 
       if( rangeTimeStartVoting > 0 || rangeTimeVoting > 0){
-
         let endTimer = setInterval(() => {
           if(rangeTimeStartVoting <= 0){
             this.startVotingTime = false;
@@ -257,12 +256,22 @@ export default {
           }
           else {
             this.startVotingTime = true;
-            this.timerVoting = this.convertTime(rangeTimeStartVoting)
+            this.timerVoting = this.convertTime(rangeTimeStartVoting);
             rangeTimeStartVoting -= 1;
           }
         }, 1000)
       }
     },
+    // winnerName(){
+    //   let paramsName = this.$router.history.current.params.name;
+    //   Object.keys(window.localStorage).forEach(function(value){
+    //     if(paramsName == JSON.parse(window.localStorage.getItem(value)).name){
+    //       if(JSON.parse(window.localStorage.getItem(value)).time.votEnd <= Math.floor(new Date().getTime()/1000.0)){
+    //         console.log('winner');
+    //       }
+    //     }
+    //   })
+    // },
   }
 }
 

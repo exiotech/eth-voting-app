@@ -5,6 +5,7 @@ import nominationPeriodPlagin from '~/plugins/nomination-vuex';
 import votingPeriodPlagin from '~/plugins/voting-vuex';
 import addCandidatePlagin from '~/plugins/addCandidate-vuex';
 import votePlagin from '~/plugins/vote-vuex';
+import giveRightToVotePlagin from '~/plugins/giveRightToVote-vuex';
 let web3;
 
 if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
@@ -20,4 +21,5 @@ export const plugins = [
   votingPeriodPlagin (web3),
   addCandidatePlagin(web3),
   votePlagin(web3),
+  giveRightToVotePlagin(web3),
 ];

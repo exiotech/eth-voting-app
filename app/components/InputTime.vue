@@ -20,7 +20,7 @@
         <select
           id="inlineFormCustomSelect"
           class="custom-select mr-sm-2"
-          @change="onChangeMonthDay($event)"
+          @change="onChangeMonthsDay($event)"
         >
           <option selected>month</option>
           <option
@@ -36,14 +36,14 @@
           <select
             id="inlineFormCustomSelect"
             class="custom-select mr-sm-2"
-            @change="onChangeDay($event)"
+            @change="onChangeDays($event)"
           >
             <option selected>day</option>
             <option
-              v-for="date in daysInMonth"
-              :key="date"
+              v-for="day in daysInMonth"
+              :key="day"
             >
-              {{ date }}
+              {{ day }}
             </option>
           </select>
         </div>
@@ -62,7 +62,7 @@
 </template>
 
 <script>
-  import { mapGetters, mapActions } from 'vuex';
+  import { mapGetters } from 'vuex';
   import moment from 'moment';
 
   export default {
@@ -71,10 +71,6 @@
         dateContext: moment(),
         keyYear: "",
         keyMonth: "",
-        keyDay: "",
-        keyHour: "",
-        keyMinute: "",
-        keySecond: "",
       }
     },
     computed: {
@@ -94,19 +90,20 @@
         this.keyYear = event.target.value;
         this.$emit('clickedYear', this.keyYear);
       },
-      onChangeMonthDay: function (event) {
+      onChangeMonthsDay: function (event) {
          this.keyMonth = event.target.value
          this.$emit('clickedMonth', this.keyMonth);
       },
-      onChangeDay: function (event) {
-        this.keyDay = event.target.value;
-        this.$emit('clickedDay', this.keyDay);
+      onChangeDays: function (event) {
+        this.$emit('clickedDay', event.target.value);
       },
       onChangeDate: function (event) {
-        this.keyHour = event.target.value.substr(0,2);
-        this.keyMinute = event.target.value.substr(3,2);
-        this.keySecond = event.target.value.substr(6,4);
-        this.$emit('clickedDate', this.keyHour, this.keyMinute, this.keySecond);
+        this.$emit(
+          'clickedDate',
+          event.target.value.substr(0,2),
+          this.keyMinute = event.target.value.substr(3,2),
+          this.keySecond = event.target.value.substr(6,4)
+        );
       },
     }
   }

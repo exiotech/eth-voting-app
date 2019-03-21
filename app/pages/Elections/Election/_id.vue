@@ -68,8 +68,11 @@
     <div class="jumbotron jumbotron-fluid">
       <div class="text-center col-md-12">
         <input
+          v-model="giveRightAddress"
           type="text"
-          placeholder="address">
+          placeholder="address"
+          @change="onChangeGiveRight($event)"
+        >
         <button>GiveRight</button>
       </div>
     </div>
@@ -88,7 +91,7 @@
 <script>
 import { mapActions } from 'vuex';
 import moment from 'moment';
-import InputTime from '../../../components/InputTime.vue'
+import InputTime from '../../../components/InputTime.vue';
 
 export default {
   components: {
@@ -122,22 +125,22 @@ export default {
       keySecondVotEnd: "",
       timerNomPeriod: "",
       timerVotPeriod: "",
+      giveRightAddress: "",
       nominationSubmit: false,
       votingSubmit: false,
       closeButtonNomPeriod: false,
       closeButtonVotPeriod: false,
-
     }
   },
   computed: {
     timerNominationPeriod: function(){
       if(this.timerNomPeriod == "00:00:00:00")
-        return false
+        return false;
       return this.timerNomPeriod;
     },
     timerVotingPeriod: function(){
       if(this.timerVotPeriod == "00:00:00:00")
-        return false
+        return false;
       return this.timerVotPeriod;
     },
   },
@@ -145,7 +148,13 @@ export default {
     ...mapActions({
       setNumPeriod: 'election/setNumPeriod',
       setVotPeriod: 'election/setVotPeriod',
+      setGiveRightToVote: 'election/setGiveRightToVote',
     }),
+    onChangeGiveRight: function(event){
+      this.setGiveRightToVote(event.target.value);
+      this.giveRightAddress = "";
+    },
+
     handleClickInParentYearNomPeriodStart: function(year) {
       this.keyYearNomStart = year;
     },
@@ -206,7 +215,7 @@ export default {
       this.keySecondVotEnd = second;
     },
     pad2: function (number) {
-      return (number < 10 ? '0' : '') + number
+      return (number < 10 ? '0' : '') + number;
     },
     convertTime: function (rangeTime){
       let seconds = parseInt(rangeTime, 10);
@@ -260,7 +269,7 @@ export default {
 
       let endTimer = setInterval(() => {
         if(rangeTimeNomPeriod == 0){
-          this.timerNomPeriod = this.convertTime(rangeTime)
+          this.timerNomPeriod = this.convertTime(rangeTime);
           if (rangeTime == 0) {
             clearInterval(endTimer);
           }
@@ -269,7 +278,7 @@ export default {
         }
         else {
           this.closeButtonNomPeriod = true;
-          this.timerNomPeriod = this.convertTime(rangeTimeNomPeriod)
+          this.timerNomPeriod = this.convertTime(rangeTimeNomPeriod);
           rangeTimeNomPeriod -= 1;
         }
       }, 1000);
@@ -326,7 +335,6 @@ export default {
         }
       }, 1000);
     },
-
   }
 }
 </script>

@@ -4,9 +4,6 @@ const routerBase = process.env.DEPLOY_ENV === 'GH_PAGES' ? '/vue-paper-dashboard
 module.exports = {
   mode: 'universal',
 
-
-
-
   /*
   ** Headers of the page
   */
@@ -64,7 +61,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend(config, ctx) {
-       config.node = { fs: 'empty' };
+
       // Run ESLint on save
       if (ctx.isDev && ctx.isClient) {
         config.module.rules.push({
