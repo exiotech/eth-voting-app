@@ -2,10 +2,12 @@ import ElectionInstance from './../plugins/ElectionContract';
 
 export const state = () => ({
   winnerCandidate: null,
+  winnerOpen: true,
 });
 
 export const getters = {
   winnerCandidate: (state) => state.winnerCandidate,
+  winnerOpen: (state) => state.winnerOpen,
 };
 
 export const actions = {
@@ -29,6 +31,7 @@ export const actions = {
 
 export const mutations = {
   WINNER_NAME(state, payload){
+    state.winnerOpen = false
     state.winnerCandidate = payload
   }
 }

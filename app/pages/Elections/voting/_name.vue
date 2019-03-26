@@ -54,7 +54,7 @@
     </div>
     <section class="container">
       <table
-        v-if="votingTime"
+        v-if="winnerOpen"
         class="table table-hover"
       >
         <thead>
@@ -140,12 +140,8 @@ export default {
       isVotingOpen: 'voting/isOpen',
       coinbase: 'web3/coinbase',
       winner: 'winnerName/winnerCandidate',
+      winnerOpen: 'winnerName/winnerOpen',
     }),
-    // winnerCandidate: function(){
-    //   if(this.winner)
-    //     return this.winner;
-    //   return false
-    // }
   },
   mounted () {
     this.addCandidate();
@@ -265,6 +261,7 @@ export default {
             this.votingTime = true;
             this.timerVoting = this.convertTime(rangeTimeVoting);
             if (rangeTimeVoting <= 0) {
+              this.winnerName();
               this.votingTime = false;
               clearInterval(endTimer);
             }

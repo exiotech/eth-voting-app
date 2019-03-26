@@ -43,7 +43,7 @@ export const  state = () => ({
             }
           })
         })();
-      }, 300);
+      }, 1000);
     },
 
     vote({commit}, candidateID){
