@@ -45,14 +45,14 @@
             <th>state</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody v-if="!electionOpen">
           <tr
             v-for="election in elections"
             :key="election.id">
             <td>{{ election.id }}</td>
             <td><nuxt-link :to="'elections/voting/' + election.name">{{ election.name }}</nuxt-link></td>
-            <td>{{ election.candidateCount }}</td>
-            <td>{{ election.state }}</td>
+            <!-- <td>{{ election.name }}</td> -->
+            <!-- <td>{{ election.state }}</td> -->
           </tr>
         </tbody>
       </table>
@@ -72,6 +72,7 @@
     computed: {
       ...mapGetters({
         elections: 'elections/elections',
+        electionOpen: 'elections/electionOpen',
       }),
       election() {
         return this.elections.filter((election) => {
@@ -80,12 +81,12 @@
       },
     },
     mounted () {
-      this.getElection();
+      this.addElections();
     },
     methods: {
       ...mapActions({
         addElectionName: 'elections/addElectionName',
-        getElection: 'elections/getElection',
+        addElections: 'elections/addElections',
       }),
       clearName() {
         this.name = "";

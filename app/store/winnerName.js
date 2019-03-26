@@ -1,7 +1,34 @@
-// export const state = () => ({
-//   winnerName: null,
-// });
-//
-// export const getters = {
-//   winnerName: (state) => state.winnerName,
-// };
+import ElectionInstance from './../plugins/ElectionContract';
+
+export const state = () => ({
+  winnerCandidate: null,
+});
+
+export const getters = {
+  winnerCandidate: (state) => state.winnerCandidate,
+};
+
+export const actions = {
+  winnerName({commit}){
+    setTimeout(function(){
+      const election = ElectionInstance.electionContract();
+      election.methods.winnerName()
+      .call()
+      .then(res => {
+        Object.keys(window.localStorage).forEach(function(value){
+          if(election._address == JSON.parse(window.localStorage.getItem(value)).election){
+            if(JSON.parse(window.localStorage.getItem(value)).votEnd <= Math.floor(new Date().getTime()/1000.0)){
+              commit('WINNER_NAME', res);
+            }
+          }
+        })
+      })
+    }, 1000);
+  }
+};
+
+export const mutations = {
+  WINNER_NAME(state, payload){
+    state.winnerCandidate = payload
+  }
+}

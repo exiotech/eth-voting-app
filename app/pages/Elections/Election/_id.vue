@@ -249,18 +249,8 @@ export default {
         this.keySecondNomEnd
       );
 
-      let tmp = this;
       let paramsID = Number(this.$router.history.current.params.id);
-      Object.keys(window.localStorage).forEach(function(value){
-        if(paramsID == JSON.parse(window.localStorage.getItem(value)).id){
-          let data = JSON.parse(window.localStorage.getItem(value));
-          data.time.nomStart = tmp.timestamp(start);
-          data.time.nomEnd = tmp.timestamp(end);
-          window.localStorage.setItem(paramsID, JSON.stringify (data));
-          return;
-        }
-      })
-      this.setNumPeriod(paramsID);
+      this.setNumPeriod({'id': paramsID, 'start': this.timestamp(start), 'end': this.timestamp(end)});
 
       let realTime = Math.floor(new Date().getTime()/1000.0);
       let rangeTimeNomPeriod = this.timestamp(start) - realTime;
@@ -302,18 +292,8 @@ export default {
         this.keySecondVotEnd
       );
 
-      let tmp = this;
       let paramsID = Number(this.$router.history.current.params.id);
-      Object.keys(window.localStorage).forEach(function(value){
-        if(paramsID == JSON.parse(window.localStorage.getItem(value)).id){
-          let data = JSON.parse(window.localStorage.getItem(value));
-          data.time.votStart = tmp.timestamp(start);
-          data.time.votEnd = tmp.timestamp(end);
-          window.localStorage.setItem(paramsID, JSON.stringify (data));
-          return;
-        }
-      })
-      this.setVotPeriod(paramsID);
+      this.setVotPeriod({'id': paramsID, 'start': this.timestamp(start), 'end': this.timestamp(end)});
 
       let realTime = Math.floor(new Date().getTime()/1000.0);
       let rangetimeVotPeriod = this.timestamp(start) - realTime;

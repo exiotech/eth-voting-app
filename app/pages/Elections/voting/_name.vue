@@ -7,7 +7,7 @@
           v-if="timeAddCandidate"
           variant="primary"
           class="pull-right"
-        >addCandidate</b-button>
+        >Add Candidate</b-button>
         <b-modal
           id="modalPrevent"
           ref="modal"
@@ -53,7 +53,10 @@
       </div>
     </div>
     <section class="container">
-      <table class="table table-hover">
+      <table
+        v-if="votingTime"
+        class="table table-hover"
+      >
         <thead>
           <tr>
             <th>#</th>
@@ -61,7 +64,7 @@
             <th>Kargaxos</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody >
           <tr
             v-for="candidate in candidates"
             :key="candidate.id">
@@ -71,6 +74,12 @@
           </tr>
         </tbody>
       </table>
+      <div
+        v-else
+        class="text-center">
+        <p>Winner Candidate</p>
+        <p>{{ winner }}</p>
+      </div>
       <form
         v-show="isVotingOpen"
         class="form-group"
@@ -108,8 +117,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations, mapActions } from 'vuex';
-
+import { mapGetters, mapActions } from 'vuex';
 
 export default {
   data () {
@@ -131,19 +139,26 @@ export default {
       candidates: 'voting/candidates',
       isVotingOpen: 'voting/isOpen',
       coinbase: 'web3/coinbase',
+      winner: 'winnerName/winnerCandidate',
     }),
+    // winnerCandidate: function(){
+    //   if(this.winner)
+    //     return this.winner;
+    //   return false
+    // }
   },
   mounted () {
     this.addCandidate();
     this.addCandidateTimer();
     this.votingTimer();
-    // this.winnerName();
+    this.winnerName();
   },
   methods: {
     ...mapActions({
       addCandidate: 'voting/addCandidate',
       addCandidateName: 'voting/addCandidateName',
       vote: 'voting/vote',
+      winnerName: 'winnerName/winnerName'
     }),
     clearName(){
       this.candidateName = "";
@@ -190,8 +205,8 @@ export default {
       let paramsName = this.$router.history.current.params.name;
       Object.keys(window.localStorage).forEach(function(value){
         if(paramsName == JSON.parse(window.localStorage.getItem(value)).name){
-          timeStartAddcandidate = JSON.parse(window.localStorage.getItem(value)).time.nomStart;
-          timeAddCandidate = JSON.parse(window.localStorage.getItem(value)).time.nomEnd;
+          timeStartAddcandidate = JSON.parse(window.localStorage.getItem(value)).nomStart;
+          timeAddCandidate = JSON.parse(window.localStorage.getItem(value)).nomEnd;
           return;
         }
       })
@@ -229,11 +244,12 @@ export default {
       let paramsName = this.$router.history.current.params.name;
       Object.keys(window.localStorage).forEach(function(value){
         if(paramsName == JSON.parse(window.localStorage.getItem(value)).name){
-          timeStartVoting = JSON.parse(window.localStorage.getItem(value)).time.votStart;
-          timeVoting = JSON.parse(window.localStorage.getItem(value)).time.votEnd;
+          timeStartVoting = JSON.parse(window.localStorage.getItem(value)).votStart;
+          timeVoting = JSON.parse(window.localStorage.getItem(value)).votEnd;
           return;
         }
       })
+
       let realTime = Math.floor(new Date().getTime()/1000.0);
       let rangeTimeStartVoting = timeStartVoting - realTime;
       let rangeTimeVoting = null;
@@ -262,16 +278,6 @@ export default {
         }, 1000)
       }
     },
-    // winnerName(){
-    //   let paramsName = this.$router.history.current.params.name;
-    //   Object.keys(window.localStorage).forEach(function(value){
-    //     if(paramsName == JSON.parse(window.localStorage.getItem(value)).name){
-    //       if(JSON.parse(window.localStorage.getItem(value)).time.votEnd <= Math.floor(new Date().getTime()/1000.0)){
-    //         console.log('winner');
-    //       }
-    //     }
-    //   })
-    // },
   }
 }
 

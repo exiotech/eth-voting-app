@@ -1,6 +1,7 @@
+import ElectionInstance from './../plugins/ElectionContract';
+
 export const  state = () => ({
     candidates: [],
-    candidateName: [],
     candidateID: 0,
     isOpen: true,
   });
@@ -11,37 +12,57 @@ export const  state = () => ({
   };
 
   export const  actions = {
-    addCandidateName({commit}, candidateName){
-      commit('ADD_CANDIDATE_NAME', candidateName);
-    },
-    getCandidate ({commit}, candidateName) {
-      commit('SET_CANDIDATE', candidateName);
-    },
+    addCandidateName({commit}, payload){
+      const election = ElectionInstance.electionContract();
+      election.methods.addCandidate(payload)
+      .send({
+        from: this.getters["web3/coinbase"],
+      })
+      election.once('CandidateCreated', (error, event) => {
+      election.methods.candidates(event.returnValues._id)
+      .call()
+      .then(res => {
+        commit('ADD_CANDIDATE', res);
+      })
+    })
+  },
+
     addCandidate({commit}){
-      commit('ADD_CANDIDATE');
+      setTimeout(function(){
+        const election = ElectionInstance.electionContract();
+        (function myLoop (i = 1) {
+          election.methods.candidates(i)
+          .call()
+          .then(res => {
+            if (res) {
+              i = parseInt(res.id);
+              if(i){
+                commit('ADD_CANDIDATE', res);
+                myLoop(++i);
+              }
+            }
+          })
+        })();
+      }, 300);
     },
+
     vote({commit}, candidateID){
+      const election = ElectionInstance.electionContract();
+      election.methods.vote(candidateID)
+      .send({
+        from: this.getters["web3/coinbase"],
+      });
       commit('SET_VOTE', candidateID);
     }
   };
 
   export const mutations = {
-    ADD_CANDIDATE_NAME(state, candidateName){
-      state.candidateName.push(candidateName);
+    ADD_CANDIDATE(state, candidate){
+      if(candidate.id == 1 && state.candidates.length > 0)
+        state.candidates = [];
+      state.candidates.push(candidate)
     },
-    SET_CANDIDATE(state,candidates){
-      state.candidates = candidates
-    },
-    ADD_CANDIDATE(state){
-      state.candidates = []
-      let tmp = this;
-      Object.keys(window.localStorage).forEach(function(value){
-        if(JSON.parse(window.localStorage.getItem(value)).name == tmp.$router.history.current.params.name){
-          state.candidates = JSON.parse(window.localStorage.getItem(value)).candidate;
-          return;
-        }
-      })
-    },
+
     SET_VOTE(state, candidateID){
       state.candidateID = candidateID;
     }

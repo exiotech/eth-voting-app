@@ -1,11 +1,7 @@
 import Web3 from 'web3';
 import createWeb3Plugin from '~/plugins/web3-vuex';
-import createAccountsPlagin from '~/plugins/election-vuex';
-import nominationPeriodPlagin from '~/plugins/nomination-vuex';
-import votingPeriodPlagin from '~/plugins/voting-vuex';
-import addCandidatePlagin from '~/plugins/addCandidate-vuex';
-import votePlagin from '~/plugins/vote-vuex';
-import giveRightToVotePlagin from '~/plugins/giveRightToVote-vuex';
+import chairperson from '~/plugins/ChairpersonContract';
+import election from '~/plugins/ElectionContract';
 let web3;
 
 if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
@@ -15,11 +11,7 @@ if (typeof window !== 'undefined' && typeof window.web3 !== 'undefined') {
 }
 
 export const plugins = [
-  createAccountsPlagin(web3),
+  chairperson.chairpersonContractPlugin(web3),
+  election.electionContractPlugin(web3),
   createWeb3Plugin(web3),
-  nominationPeriodPlagin(web3),
-  votingPeriodPlagin (web3),
-  addCandidatePlagin(web3),
-  votePlagin(web3),
-  giveRightToVotePlagin(web3),
 ];
