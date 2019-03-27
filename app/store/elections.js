@@ -23,7 +23,7 @@ export const  state = () => ({
         chairperson.methods.elections(event.returnValues._id)
         .call()
         .then(res => {
-          window.localStorage.setItem(res.id, JSON.stringify({id: res.id, name: res.name, election: res.election}));
+          window.localStorage.setItem(res.id, JSON.stringify([{ id: res.id, name: res.name, election: res.election }]));
           commit("ADD_ELECTION", res);
         })
       return;

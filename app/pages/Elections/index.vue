@@ -104,11 +104,13 @@
           this.name = "";
         });
         this.$refs.modal.hide();
+
         if(this.election){
           this.$router.push(`Elections/Election/${ (Number(this.election.id) + 1) }`);
         }
         else
           this.$router.push(`Elections/Election/${ 1 }`);
+
       },
       handleCancel(){
         this.$refs.modal.hide();
