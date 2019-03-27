@@ -24,6 +24,7 @@ export const actions = {
       window.localStorage.setItem(data.id, JSON.stringify(data))
       commit('SET_NUM_PERIOD', payload.id);
     },
+
     setVotPeriod({commit}, payload){
       const election = ElectionInstance.electionContract();
       election.methods.votingPeriod(payload.start, payload.end)
@@ -36,6 +37,7 @@ export const actions = {
       window.localStorage.setItem(data.id, JSON.stringify(data))
       commit('SET_VOT_PERIOD', payload.id);
     },
+
     setGiveRightToVote({commit}, payload){
       const election = ElectionInstance.electionContract();
       election.methods.giveRightToVote(payload)

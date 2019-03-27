@@ -23,10 +23,9 @@ export const  state = () => ({
         chairperson.methods.elections(event.returnValues._id)
         .call()
         .then(res => {
-          window.localStorage.setItem(res.id, JSON.stringify(res));
+          window.localStorage.setItem(res.id, JSON.stringify({id: res.id, name: res.name, election: res.election}));
           commit("GET_ELECTION", res);
         })
-        console.log(event);
       return;
       })
       commit("ADD_ELECTION_NAME", electionName);
@@ -39,11 +38,20 @@ export const  state = () => ({
         .then(res => {
           if(res){
             i = res.id;
-            if(i){
-              // window.localStorage.clear();
+            if(i != 0){
+              let data = JSON.parse(window.localStorage.getItem(i + ''));
+              window.localStorage.removeItem(i+'');
+              data.id = res.id;
+              data.name = res.name;
+              data.election = res.election;
+              window.localStorage.setItem(data.id, JSON.stringify(data))
+              console.log(JSON.parse(window.localStorage.getItem(i + '')));
               commit("GET_ELECTION", res);
               myLoop(++i);
             }
+          }
+          else {
+            window.localStorage.clear();
           }
         })
       })();

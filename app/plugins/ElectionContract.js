@@ -3,10 +3,8 @@ import Election from './../../build/contracts/Election.json';
 let instance = null;
 function electionContractPlugin(web3){
   return (store) => {
-
     if (typeof window !== 'undefined') {
       window.ethereum.enable();
-
       store.subscribe(() => {
         Object.keys(window.localStorage).forEach(function(value){
           let data = JSON.parse(window.localStorage.getItem(value));
