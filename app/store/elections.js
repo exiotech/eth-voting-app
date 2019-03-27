@@ -24,7 +24,7 @@ export const  state = () => ({
         .call()
         .then(res => {
           window.localStorage.setItem(res.id, JSON.stringify({id: res.id, name: res.name, election: res.election}));
-          commit("GET_ELECTION", res);
+          commit("ADD_ELECTION", res);
         })
       return;
       })
@@ -32,6 +32,7 @@ export const  state = () => ({
     },
     addElections({commit}){
       const chairperson = ContractInstance.chairpersonContract();
+      let arr = [];
       (function myLoop (i = 1) {
         chairperson.methods.elections(i)
         .call()
@@ -45,8 +46,7 @@ export const  state = () => ({
               data.name = res.name;
               data.election = res.election;
               window.localStorage.setItem(data.id, JSON.stringify(data))
-              console.log(JSON.parse(window.localStorage.getItem(i + '')));
-              commit("GET_ELECTION", res);
+              arr.push(res);
               myLoop(++i);
             }
           }
@@ -55,13 +55,16 @@ export const  state = () => ({
           }
         })
       })();
+      setTimeout(function(){
+        commit("ADD_ELECTION", arr);
+      }, 1500)
+
     }
   };
 
   export const mutations = {
-    GET_ELECTION(state, election){
-      if(state.elections.length + 1 == election.id)
-        state.elections.push(election)
+    ADD_ELECTION(state, election){
+      state.elections = election
     },
     ADD_ELECTION_NAME(state, electionName){
       state.electionName.push(electionName);

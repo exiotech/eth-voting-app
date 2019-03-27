@@ -19,17 +19,18 @@ export const  state = () => ({
         from: this.getters["web3/coinbase"],
       })
       election.once('CandidateCreated', (error, event) => {
-      election.methods.candidates(event.returnValues._id)
-      .call()
-      .then(res => {
-        commit('ADD_CANDIDATE', res);
+        election.methods.candidates(event.returnValues._id)
+        .call()
+        .then(res => {
+          commit('ADD_CANDIDATE', res);
+        })
       })
-    })
-  },
+    },
 
     addCandidate({commit}){
       setTimeout(function(){
         const election = ElectionInstance.electionContract();
+        let arr = [];
         (function myLoop (i = 1) {
           election.methods.candidates(i)
           .call()
@@ -37,12 +38,15 @@ export const  state = () => ({
             if (res) {
               i = parseInt(res.id);
               if(i){
-                commit('ADD_CANDIDATE', res);
+                arr.push(res);
                 myLoop(++i);
               }
             }
           })
         })();
+        setTimeout(function(){
+          commit("ADD_CANDIDATE", arr);
+        }, 500)
       }, 1000);
     },
 
@@ -58,9 +62,7 @@ export const  state = () => ({
 
   export const mutations = {
     ADD_CANDIDATE(state, candidate){
-      if(candidate.id == 1 && state.candidates.length > 0)
-        state.candidates = [];
-      state.candidates.push(candidate)
+      state.candidates = candidate
     },
 
     SET_VOTE(state, candidateID){
