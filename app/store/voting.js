@@ -1,4 +1,5 @@
 import ElectionInstance from './../plugins/ElectionContract';
+import web3 from './exportWeb3'
 
 export const  state = () => ({
     candidates: [],
@@ -19,10 +20,20 @@ export const  state = () => ({
         from: this.getters["web3/coinbase"],
       })
       election.once('CandidateCreated', (error, event) => {
-        election.methods.candidates(event.returnValues._id)
-        .call()
+        web3.eth.getTransactionReceipt(event.transactionHash)
         .then(res => {
-          commit('ADD_CANDIDATE', res);
+          if(res.status){
+            commit('ADD_CANDIDATE', [{id: event.returnValues._id, name: event.returnValues._name}]);
+            alert('please Refresh page')
+            Object.keys(window.localStorage).forEach(function(value){
+              let data = JSON.parse(window.localStorage.getItem(value));
+              if(data.name == window.$nuxt.$root.$store.$router.history.current.params.name){
+                data.candidateCount = event.returnValues._id;
+                window.localStorage.setItem(data.id, JSON.stringify(data));
+                return;
+              }
+            })
+          }
         })
       })
     },
@@ -56,7 +67,14 @@ export const  state = () => ({
       .send({
         from: this.getters["web3/coinbase"],
       });
-      commit('SET_VOTE', candidateID);
+      election.once('voteFor', (error, event) => {
+        web3.eth.getTransactionReceipt(event.transactionHash)
+        .then(res => {
+          if(res.status){
+            commit('SET_VOTE', candidateID);
+          }
+        })
+      })
     }
   };
 

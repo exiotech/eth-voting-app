@@ -50,11 +50,11 @@
       </div>
       <input
         type="text"
-        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9]){2}"
+        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])"
         class="form-control"
         required
-        placeholder="HH:mm:ss"
-        maxlength="8"
+        placeholder="HH:mm"
+        maxlength="5"
         @change="onChangeDate($event)"
       >
     </div>
@@ -102,7 +102,6 @@
           'clickedDate',
           event.target.value.substr(0,2),
           this.keyMinute = event.target.value.substr(3,2),
-          this.keySecond = event.target.value.substr(6,4)
         );
       },
     }

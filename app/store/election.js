@@ -1,4 +1,5 @@
 import ElectionInstance from './../plugins/ElectionContract';
+import web3 from './exportWeb3'
 
 export const  state = () => ({
   years: ['2019', '2020', '2021', '2022', '2023', '2024','2025', '2026', '2027', '2028', '2029', '2030'],
@@ -18,11 +19,18 @@ export const actions = {
       .send({
         from: this.getters["web3/coinbase"],
       })
-      let data = JSON.parse(window.localStorage.getItem(payload.id + ""))
-      data.nomStart = payload.start;
-      data.nomEnd = payload.end;
-      window.localStorage.setItem(data.id, JSON.stringify(data))
-      commit('SET_NUM_PERIOD', payload.id);
+      election.once('Nomination', (error, event) => {
+        web3.eth.getTransactionReceipt(event.transactionHash)
+        .then(res => {
+          if(res.status){
+            let data = JSON.parse(window.localStorage.getItem(payload.id + ""))
+            data.nomStart = payload.start;
+            data.nomEnd = payload.end;
+            window.localStorage.setItem(data.id, JSON.stringify(data))
+            commit('SET_NUM_PERIOD', payload.id);
+          }
+        })
+      })
     },
 
     setVotPeriod({commit}, payload){
@@ -31,11 +39,18 @@ export const actions = {
       .send({
         from: this.getters["web3/coinbase"],
       })
-      let data = JSON.parse(window.localStorage.getItem(payload.id + ""))
-      data.votStart = payload.start;
-      data.votEnd = payload.end;
-      window.localStorage.setItem(data.id, JSON.stringify(data))
-      commit('SET_VOT_PERIOD', payload.id);
+      election.once('Voting', (error, event) => {
+        web3.eth.getTransactionReceipt(event.transactionHash)
+        .then(res => {
+          if(res.status){
+            let data = JSON.parse(window.localStorage.getItem(payload.id + ""))
+            data.votStart = payload.start;
+            data.votEnd = payload.end;
+            window.localStorage.setItem(data.id, JSON.stringify(data))
+            commit('SET_VOT_PERIOD', payload.id);
+          }
+        })
+      })
     },
 
     setGiveRightToVote({commit}, payload){
@@ -44,7 +59,15 @@ export const actions = {
       .send({
         from: this.getters["web3/coinbase"],
       })
-      commit('SET_GIVE_RIGHT_TO_VOTE', payload);
+      election.once('givePermission', (error, event) => {
+        web3.eth.getTransactionReceipt(event.transactionHash)
+        .then(res => {
+          if(res.status){
+            commit('SET_GIVE_RIGHT_TO_VOTE', payload);
+          }
+        })
+      })
+
     }
 };
 

@@ -1,14 +1,17 @@
 import ContractInstance from './../plugins/ChairpersonContract';
+import web3 from './exportWeb3'
 
 export const  state = () => ({
      elections: [],
      electionName: [],
      electionOpen: false,
+     spinnerLoading: false,
   });
 
   export const getters = {
     elections: (state) => state.elections,
     electionOpen: (state) => state.electionOpen,
+    spinnerLoading: (state) => state.spinnerLoading,
   };
 
   export const actions = {
@@ -20,13 +23,25 @@ export const  state = () => ({
         gas: 2000000
       });
       chairperson.once('electionCreated', (error, event) => {
-        chairperson.methods.elections(event.returnValues._id)
-        .call()
+        web3.eth.getTransactionReceipt(event.transactionHash)
         .then(res => {
-          window.localStorage.setItem(res.id, JSON.stringify([{ id: res.id, name: res.name, election: res.election }]));
-          commit("ADD_ELECTION", res);
-        })
-      return;
+          if(res.status){
+            let data = {
+              id: event.returnValues._id,
+              name: event.returnValues._name,
+              election: event.returnValues._election,
+              candidateCount: 0,
+              state: 'passive'
+            };
+            if(event.returnValues._id == 1) {
+              window.localStorage.clear();
+            }
+            window.localStorage.setItem(event.returnValues._id, JSON.stringify(data));
+            commit("ADD_ELECTION", data);
+            window.$nuxt.$root.$store.$router.push(`Elections/Election/${ event.returnValues._id }`);
+            return;
+          }
+        });
       })
       commit("ADD_ELECTION_NAME", electionName);
     },
@@ -46,12 +61,9 @@ export const  state = () => ({
               data.name = res.name;
               data.election = res.election;
               window.localStorage.setItem(data.id, JSON.stringify(data))
-              arr.push(res);
+              arr.push(data);
               myLoop(++i);
             }
-          }
-          else {
-            window.localStorage.clear();
           }
         })
       })();

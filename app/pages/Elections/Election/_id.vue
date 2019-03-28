@@ -119,10 +119,6 @@ export default {
       keyMinuteNomEnd: "",
       keyMinuteVotStart: "",
       keyMinuteVotEnd: "",
-      keySecondNomStart: "",
-      keySecondNomEnd: "",
-      keySecondVotStart: "",
-      keySecondVotEnd: "",
       timerNomPeriod: "",
       timerVotPeriod: "",
       giveRightAddress: "",
@@ -197,22 +193,18 @@ export default {
     handleClickInParentDateNomPeriodStart: function(hour, minute, second) {
       this.keyHourNomStart = hour;
       this.keyMinuteNomStart = minute;
-      this.keySecondNomStart = second;
     },
     handleClickInParentDateNomPeriodEnd: function(hour, minute, second) {
       this.keyHourNomEnd = hour;
       this.keyMinuteNomEnd = minute;
-      this.keySecondNomEnd = second;
     },
     handleClickInParentDateVotPeriodStart: function(hour, minute, second) {
       this.keyHourVotStart = hour;
       this.keyMinuteVotStart = minute;
-      this.keySecondVotStart = second;
     },
     handleClickInParentDateVotPeriodEnd: function(hour, minute, second) {
       this.keyHourVotEnd = hour;
       this.keyMinuteVotEnd = minute;
-      this.keySecondVotEnd = second;
     },
     pad2: function (number) {
       return (number < 10 ? '0' : '') + number;
@@ -238,7 +230,7 @@ export default {
         this.keyDayNomStart,
         this.keyHourNomStart,
         this.keyMinuteNomStart,
-        this.keySecondNomStart
+        0
       );
       let end = new Date(
         this.keyYearNomEnd,
@@ -246,7 +238,7 @@ export default {
         this.keyDayNomEnd,
         this.keyHourNomEnd,
         this.keyMinuteNomEnd,
-        this.keySecondNomEnd
+        0
       );
 
       let paramsID = Number(this.$router.history.current.params.id);
@@ -281,7 +273,7 @@ export default {
         this.keyDayVotStart,
         this.keyHourVotStart,
         this.keyMinuteVotStart,
-        this.keySecondVotStart
+        0
       );
       let end = new Date(
         this.keyYearVotEnd,
@@ -289,7 +281,7 @@ export default {
         this.keyDayVotEnd,
         this.keyHourVotEnd,
         this.keyMinuteVotEnd,
-        this.keySecondVotEnd
+        0
       );
 
       let paramsID = Number(this.$router.history.current.params.id);

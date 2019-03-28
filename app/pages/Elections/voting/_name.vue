@@ -47,6 +47,7 @@
       <div>
         <p v-if="startTimeAddCandidate">Start time add candidate: {{ timerCandidate }}</p>
         <p v-else-if="timeAddCandidate">add candidate time: {{ timerCandidate }}</p>
+        <p v-else-if="timeAddCandidateEnd">End Add Candidate Period</p>
         <p v-else-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
         <p v-else-if="votingTime">Voting time: {{ timerVoting }}</p>
         <p v-else> End Voting</p>
@@ -130,6 +131,7 @@ export default {
       isLoading: false,
       startTimeAddCandidate: false,
       timeAddCandidate: false,
+      timeAddCandidateEnd: false,
       startVotingTime: false,
       votingTime: false,
     };
@@ -222,6 +224,7 @@ export default {
             this.timerCandidate = this.convertTime(rangeTimeAddCandidate)
             if (rangeTimeAddCandidate <= 0) {
               this.timeAddCandidate = false;
+              this.timeAddCandidateEnd = true;
               clearInterval(endTimer);
             }
             rangeTimeAddCandidate -= 1;
@@ -268,6 +271,7 @@ export default {
             rangeTimeVoting -= 1;
           }
           else {
+            this.timeAddCandidateEnd = false;
             this.startVotingTime = true;
             this.timerVoting = this.convertTime(rangeTimeStartVoting);
             rangeTimeStartVoting -= 1;

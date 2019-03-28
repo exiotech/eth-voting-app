@@ -2,7 +2,7 @@
   <div>
     <div class="jumbotron jumbotron-fluid text-center">
       <div class="title-election">
-        <h1>Election</h1>
+        <h1>Elections</h1>
         <div class="text-right">
           <b-button
             v-b-modal.modalPrevent
@@ -39,9 +39,9 @@
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>#</th>
+            <th>Id</th>
             <th>name</th>
-            <th>candidateCount</th>
+            <th>Candidate Count</th>
             <th>state</th>
           </tr>
         </thead>
@@ -51,8 +51,8 @@
             :key="election.id">
             <td>{{ election.id }}</td>
             <td><nuxt-link :to="'elections/voting/' + election.name">{{ election.name }}</nuxt-link></td>
-            <!-- <td>{{ election.name }}</td> -->
-            <!-- <td>{{ election.state }}</td> -->
+            <td>{{ election.candidateCount }}</td>
+            <td>{{ election.state }}</td>
           </tr>
         </tbody>
       </table>
@@ -74,11 +74,6 @@
         elections: 'elections/elections',
         electionOpen: 'elections/electionOpen',
       }),
-      election() {
-        return this.elections.filter((election) => {
-            return election.id == this.elections.length;
-        })[0];
-      },
     },
     mounted () {
       this.addElections();
@@ -104,13 +99,6 @@
           this.name = "";
         });
         this.$refs.modal.hide();
-
-        if(this.election){
-          this.$router.push(`Elections/Election/${ (Number(this.election.id) + 1) }`);
-        }
-        else
-          this.$router.push(`Elections/Election/${ 1 }`);
-
       },
       handleCancel(){
         this.$refs.modal.hide();
