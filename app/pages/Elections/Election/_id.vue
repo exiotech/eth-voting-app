@@ -73,7 +73,7 @@
           placeholder="address"
           @change="onChangeGiveRight($event)"
         >
-        <button>GiveRight</button>
+        <button class="btn btn-success btn-clock">GiveRight</button>
       </div>
     </div>
     <div class="text-center">

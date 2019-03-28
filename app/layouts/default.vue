@@ -4,15 +4,22 @@
       class="btn-group mr-2"
       role="group"
       aria-label="First group">
-      <button
-        type="button"
-        class="btn btn-outline-info text-left"><nuxt-link to="/elections">elections</nuxt-link></button>
-      <button
-        type="button"
-        class="btn btn-outline-info text-left"><nuxt-link to="/elections/election">election</nuxt-link></button>
-      <button
-        type="button"
-        class="btn btn-outline-info text-left"><nuxt-link to="/elections/voting">voting</nuxt-link></button>
+
+      <nuxt-link
+        class="btn btn-primary"
+        to="/elections"
+        role="button"
+      >Elections</nuxt-link>
+      <nuxt-link
+        class="btn btn-primary"
+        to="/elections/election"
+        role="button"
+      >Election</nuxt-link>
+      <nuxt-link
+        class="btn btn-primary"
+        to="/elections/voting"
+        role="button"
+      >voting</nuxt-link>
     </div>
     <main
       role="main"
