@@ -88,7 +88,6 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
   import moment from 'moment';
 
   export default {
@@ -100,11 +99,6 @@
       }
     },
     computed: {
-      ...mapGetters({
-        years: 'election/years',
-        hours: 'election/hours',
-        minutes: 'election/minutes',
-      }),
       monthsShort: function () {
         return this.dateContext.localeData('es').monthsShort();
       },
@@ -121,6 +115,33 @@
         if(new Date().getMinutes() < 10)
          return "0" + new Date().getMinutes();
         return new Date().getMinutes();
+      },
+      years: function(){
+        let years = [];
+        for(let i = 0; i < 50; i++){
+          years.push(i + 2019)
+        }
+        return years
+      },
+      hours: function(){
+        let hours = [];
+        for(let i = 0; i < 24; i++){
+          if(i < 10)
+            hours.push("0" + i)
+          else
+            hours.push(i)
+        }
+        return hours
+      },
+      minutes: function(){
+        let minutes = [];
+        for(let i = 0; i < 60; i++){
+          if(i < 10)
+            minutes.push("0" + i)
+          else
+            minutes.push(i)
+        }
+        return minutes
       },
 
     },
