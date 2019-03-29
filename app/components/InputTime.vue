@@ -1,13 +1,13 @@
 <template>
   <div>
-    <div class="form-group row justify-content-center">
+    <div class="row">
       <div class="_5k_5">
         <select
           id="nominationPeriodStartYearsSelect"
           class="custom-select  mr-sm-2"
           @change="onChangeYearsMonth($event)"
         >
-          <option selected>year</option>
+          <option selected>{{ new Date().getFullYear() }}</option>
           <option
             v-for="year in years"
             :key="year"
@@ -15,6 +15,7 @@
             {{ year }}
           </option>
         </select>
+        <p class="text-center">years</p>
       </div>
       <div class="_5k_5">
         <select
@@ -22,7 +23,7 @@
           class="custom-select mr-sm-2"
           @change="onChangeMonthsDay($event)"
         >
-          <option selected>month</option>
+          <option selected>{{ monthsShort[new Date().getMonth()] }}</option>
           <option
             v-for="month in monthsShort"
             :key="month"
@@ -30,6 +31,7 @@
             {{ month }}
           </option>
         </select>
+        <p class="text-center">months</p>
       </div>
       <div class="_5k_5">
         <div class="dates">
@@ -38,7 +40,7 @@
             class="custom-select mr-sm-2"
             @change="onChangeDays($event)"
           >
-            <option selected>day</option>
+            <option selected>{{ new Date().getDate() }}</option>
             <option
               v-for="day in daysInMonth"
               :key="day"
@@ -46,17 +48,41 @@
               {{ day }}
             </option>
           </select>
+          <p class="text-center">days</p>
         </div>
       </div>
-      <input
-        type="text"
-        pattern="(0[0-9]|1[0-9]|2[0-3])(:[0-5][0-9])"
-        class="form-control"
-        required
-        placeholder="HH:mm"
-        maxlength="5"
-        @change="onChangeDate($event)"
-      >
+      <div class="_5k_5">
+        <select
+          id="inlineFormCustomSelect"
+          class="custom-select mr-sm-2"
+          @change="onChangeHours($event)"
+        >
+          <option selected>{{ hour }}</option>
+          <option
+            v-for="hour in hours"
+            :key="hour"
+          >
+            {{ hour }}
+          </option>
+        </select>
+        <p class="text-center">hours</p>
+      </div>
+      <div class="_5k_5">
+        <select
+          id="inlineFormCustomSelect"
+          class="custom-select mr-sm-2"
+          @change="onChangeMinutes($event)"
+        >
+          <option selected>{{ minute }}</option>
+          <option
+            v-for="minute in minutes"
+            :key="minute"
+          >
+            {{ minute }}
+          </option>
+        </select>
+        <p class="text-center">minutes</p>
+      </div>
     </div>
   </div>
 </template>
@@ -76,6 +102,8 @@
     computed: {
       ...mapGetters({
         years: 'election/years',
+        hours: 'election/hours',
+        minutes: 'election/minutes',
       }),
       monthsShort: function () {
         return this.dateContext.localeData('es').monthsShort();
@@ -84,6 +112,17 @@
         this.dateContext.set({'year': this.keyYear, 'month': this.dateContext.localeData('es').monthsShort().indexOf(this.keyMonth)});
         return this.dateContext.daysInMonth();
       },
+      hour: function(){
+        if(new Date().getHours() < 10)
+         return "0" + new Date().getHours();
+        return new Date().getHours();
+      },
+      minute: function(){
+        if(new Date().getMinutes() < 10)
+         return "0" + new Date().getMinutes();
+        return new Date().getMinutes();
+      },
+
     },
     methods: {
       onChangeYearsMonth: function (event) {
@@ -97,12 +136,11 @@
       onChangeDays: function (event) {
         this.$emit('clickedDay', event.target.value);
       },
-      onChangeDate: function (event) {
-        this.$emit(
-          'clickedDate',
-          event.target.value.substr(0,2),
-          this.keyMinute = event.target.value.substr(3,2),
-        );
+      onChangeHours: function (event) {
+        this.$emit('clickedHour', event.target.value);
+      },
+      onChangeMinutes: function (event) {
+        this.$emit('clickedMinute', event.target.value);
       },
     }
   }

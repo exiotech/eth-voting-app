@@ -2,25 +2,27 @@
   <div>
     <div class="jumbotron jumbotron-fluid">
       <h3 class="text-center">Nomination Period</h3>
-      <div class="text-center">
-        <p>Start time:</p>
+      <div class="form-group row justify-content-center">
+        <p class="time-text mr-sm-3">Start time:</p>
         <no-ssr>
           <InputTime
             @clickedYear="handleClickInParentYearNomPeriodStart"
             @clickedMonth="handleClickInParentMonthNomPeriodStart"
             @clickedDay="handleClickInParentDayNomPeriodStart"
-            @clickedDate="handleClickInParentDateNomPeriodStart"
+            @clickedHour="handleClickInParentHourNomPeriodStart"
+            @clickedMinute="handleClickInParentMinuteNomPeriodStart"
           />
         </no-ssr>
       </div>
-      <div class="text-center">
-        <p>End time:</p>
+      <div class="form-group row justify-content-center">
+        <p class="time-text mr-sm-3">End time:</p>
         <no-ssr>
           <InputTime
             @clickedYear="handleClickInParentYearNomPeriodEnd"
             @clickedMonth="handleClickInParentMonthNomPeriodEnd"
             @clickedDay="handleClickInParentDayNomPeriodEnd"
-            @clickedDate="handleClickInParentDateNomPeriodEnd"
+            @clickedHour="handleClickInParentHourNomPeriodEnd"
+            @clickedMinute="handleClickInParentMinuteNomPeriodEnd"
           />
         </no-ssr>
       </div>
@@ -34,25 +36,27 @@
     </div>
     <div class="jumbotron jumbotron-fluid">
       <h3 class="text-center">Voting Period</h3>
-      <div class="text-center">
-        <p>Start time:</p>
+      <div class="form-group row justify-content-center">
+        <p class="time-text mr-sm-3">Start time:</p>
         <no-ssr>
           <InputTime
-            @clickedYear="handleClickInParentYearVotPeriodStart"
+            @clickedYear="handleClickInParentYearNomPeriodEnd"
             @clickedMonth="handleClickInParentMonthVotPeriodStart"
             @clickedDay="handleClickInParentDayVotPeriodStart"
-            @clickedDate="handleClickInParentDateVotPeriodStart"
+            @clickedHour="handleClickInParentHourNomPeriodEnd"
+            @clickedMinute="handleClickInParentMinuteNomPeriodEnd"
           />
         </no-ssr>
       </div>
-      <div class="text-center">
-        <p>End time:</p>
+      <div class="form-group row justify-content-center">
+        <p class="time-text mr-sm-3">End time:</p>
         <no-ssr>
           <InputTime
             @clickedYear="handleClickInParentYearVotPeriodEnd"
             @clickedMonth="handleClickInParentMonthVotPeriodEnd"
             @clickedDay="handleClickInParentDayVotPeriodEnd"
-            @clickedDate="handleClickInParentDateVotPeriodEnd"
+            @clickedHour="handleClickInParentHourVotPeriodEnd"
+            @clickedMinute="handleClickInParentMinuteVotPeriodEnd"
           />
         </no-ssr>
       </div>
@@ -99,26 +103,26 @@ export default {
   },
   data(){
     return {
-      keyYearNomStart: "",
-      keyYearNomEnd: "",
-      keyYearVotStart: "",
-      keyYearVotEnd: "",
-      keyMonthNomStart: "",
-      keyMonthNomEnd: "",
-      keyMonthVotStart: "",
-      keyMonthVotEnd: "",
-      keyDayNomStart: "",
-      keyDayNomEnd: "",
-      keyDayVotStart: "",
-      keyDayVotEnd: "",
-      keyHourNomStart: "",
-      keyHourNomEnd: "",
-      keyHourVotStart: "",
-      keyHourVotEnd: "",
-      keyMinuteNomStart: "",
-      keyMinuteNomEnd: "",
-      keyMinuteVotStart: "",
-      keyMinuteVotEnd: "",
+      keyYearNomStart: new Date().getFullYear(),
+      keyYearNomEnd: new Date().getFullYear(),
+      keyYearVotStart: new Date().getFullYear(),
+      keyYearVotEnd: new Date().getFullYear(),
+      keyMonthNomStart: moment().format('MMM'),
+      keyMonthNomEnd: moment().format('MMM'),
+      keyMonthVotStart: moment().format('MMM'),
+      keyMonthVotEnd: moment().format('MMM'),
+      keyDayNomStart: new Date().getDate(),
+      keyDayNomEnd: new Date().getDate(),
+      keyDayVotStart: new Date().getDate(),
+      keyDayVotEnd: new Date().getDate(),
+      keyHourNomStart: new Date().getHours(),
+      keyHourNomEnd: new Date().getHours(),
+      keyHourVotStart: new Date().getHours(),
+      keyHourVotEnd: new Date().getHours(),
+      keyMinuteNomStart: new Date().getMinutes(),
+      keyMinuteNomEnd: new Date().getMinutes(),
+      keyMinuteVotStart: new Date().getMinutes(),
+      keyMinuteVotEnd: new Date().getMinutes(),
       timerNomPeriod: "",
       timerVotPeriod: "",
       giveRightAddress: "",
@@ -190,20 +194,28 @@ export default {
       this.keyDayVotEnd = day;
     },
 
-    handleClickInParentDateNomPeriodStart: function(hour, minute, second) {
+    handleClickInParentHourNomPeriodStart: function(hour) {
       this.keyHourNomStart = hour;
+    },
+    handleClickInParentHourNomPeriodEnd: function(hour) {
+      this.keyHourNomEnd = hour;
+    },
+    handleClickInParentHourVotPeriodStart: function(hour) {
+      this.keyHourVotStart = hour;
+    },
+    handleClickInParentHourVotPeriodEnd: function(hour) {
+      this.keyHourVotEnd = hour;
+    },
+    handleClickInParentMinuteNomPeriodStart: function(minute) {
       this.keyMinuteNomStart = minute;
     },
-    handleClickInParentDateNomPeriodEnd: function(hour, minute, second) {
-      this.keyHourNomEnd = hour;
+    handleClickInParentMinuteNomPeriodEnd: function(minute) {
       this.keyMinuteNomEnd = minute;
     },
-    handleClickInParentDateVotPeriodStart: function(hour, minute, second) {
-      this.keyHourVotStart = hour;
+    handleClickInParentMinuteVotPeriodStart: function(minute) {
       this.keyMinuteVotStart = minute;
     },
-    handleClickInParentDateVotPeriodEnd: function(hour, minute, second) {
-      this.keyHourVotEnd = hour;
+    handleClickInParentMinuteVotPeriodEnd: function(minute) {
       this.keyMinuteVotEnd = minute;
     },
     pad2: function (number) {

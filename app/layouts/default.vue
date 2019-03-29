@@ -6,17 +6,17 @@
       aria-label="First group">
 
       <nuxt-link
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
         to="/elections"
         role="button"
       >Elections</nuxt-link>
       <nuxt-link
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
         to="/elections/election"
         role="button"
       >Election</nuxt-link>
       <nuxt-link
-        class="btn btn-primary"
+        class="btn btn-outline-primary"
         to="/elections/voting"
         role="button"
       >voting</nuxt-link>
