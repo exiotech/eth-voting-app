@@ -9,14 +9,8 @@ function chairpersonContractPlugin(web3){
     });
     return instance;
   }
-
 };
 function chairpersonContract(){
-  // let interval = setInterval(() => {
-  //     if(instance != null){
-  //       clearInterval(interval)
-  //     }
-  // }, 1000)
   return instance;
 }
 
