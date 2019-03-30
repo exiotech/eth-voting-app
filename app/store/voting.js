@@ -23,8 +23,7 @@ export const  state = () => ({
         web3.eth.getTransactionReceipt(event.transactionHash)
         .then(res => {
           if(res.status){
-            commit('ADD_CANDIDATE', [{id: event.returnValues._id, name: event.returnValues._name}]);
-            alert('please Refresh page')
+            window.$nuxt.$root.$store._actions["voting/addCandidate"][0]();
             Object.keys(window.localStorage).forEach(function(value){
               let data = JSON.parse(window.localStorage.getItem(value));
               if(data.name == window.$nuxt.$root.$store.$router.history.current.params.name){
@@ -57,7 +56,7 @@ export const  state = () => ({
         })();
         setTimeout(function(){
           commit("ADD_CANDIDATE", arr);
-        }, 500)
+        }, 1000)
       }, 1000);
     },
 
