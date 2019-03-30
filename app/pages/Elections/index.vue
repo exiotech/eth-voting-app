@@ -110,6 +110,25 @@
       handleCancel(){
         this.$refs.modal.hide();
       }
+      // test(){
+      //   let interval = setInterval(() => {
+      //     console.log('*******');
+      //     Object.keys(window.localStorage).forEach(function(value){
+      //       let data = JSON.parse(window.localStorage.getItem(value));
+      //       if(Math.floor(new Date().getTime()/1000.0) == data.votStart){
+      //         console.log('+++++');
+      //         data.state = "active";
+      //         window.localStorage.setItem(data.id, JSON.stringify(data));
+      //       }
+      //       if(Math.floor(new Date().getTime()/1000.0) == data.votEnd){
+      //         console.log('-----');
+      //         data.state = "EndVoting";
+      //         window.localStorage.setItem(data.id, JSON.stringify(data));
+      //         clearInterval(interval);
+      //       }
+      //     })
+      //   },1000)
+      // }
     },
 
   }

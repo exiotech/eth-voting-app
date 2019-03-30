@@ -40,11 +40,11 @@
         <p class="time-text mr-sm-3">Start time:</p>
         <no-ssr>
           <InputTime
-            @clickedYear="handleClickInParentYearNomPeriodEnd"
+            @clickedYear="handleClickInParentYearVotPeriodStart"
             @clickedMonth="handleClickInParentMonthVotPeriodStart"
             @clickedDay="handleClickInParentDayVotPeriodStart"
-            @clickedHour="handleClickInParentHourNomPeriodEnd"
-            @clickedMinute="handleClickInParentMinuteNomPeriodEnd"
+            @clickedHour="handleClickInParentHourVotPeriodStart"
+            @clickedMinute="handleClickInParentMinuteVotPeriodStart"
           />
         </no-ssr>
       </div>
