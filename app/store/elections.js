@@ -4,14 +4,10 @@ import web3 from './exportWeb3'
 export const  state = () => ({
      elections: [],
      electionName: [],
-     electionOpen: false,
-     spinnerLoading: false,
   });
 
   export const getters = {
     elections: (state) => state.elections,
-    electionOpen: (state) => state.electionOpen,
-    spinnerLoading: (state) => state.spinnerLoading,
   };
 
   export const actions = {

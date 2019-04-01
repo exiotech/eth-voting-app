@@ -45,12 +45,22 @@
             <th>state</th>
           </tr>
         </thead>
-        <tbody v-if="!electionOpen">
+        <tbody v-if="test">
           <tr
             v-for="election in elections"
             :key="election.id">
             <td>{{ election.id }}</td>
-            <td><nuxt-link :to="'elections/' + link + election.name">{{ election.name }}</nuxt-link></td>
+            <td><nuxt-link :to="'elections/election/' + election.id">{{ election.name }}</nuxt-link></td>
+            <td>{{ election.candidateCount }}</td>
+            <td>{{ election.state }}</td>
+          </tr>
+        </tbody>
+        <tbody v-else>
+          <tr
+            v-for="election in elections"
+            :key="election.id">
+            <td>{{ election.id }}</td>
+            <td><nuxt-link :to="'elections/voting/' + election.name">{{ election.name }}</nuxt-link></td>
             <td>{{ election.candidateCount }}</td>
             <td>{{ election.state }}</td>
           </tr>
@@ -72,14 +82,14 @@
     computed: {
       ...mapGetters({
         elections: 'elections/elections',
-        electionOpen: 'elections/electionOpen',
         web3: 'web3/coinbase',
       }),
-      link: function(){
+      test: function(){
+        console.log(this.web3);
         if(this.web3 == "0xee2c37b90c2b7ffb0d944f614e60bd5a2c760750")
-          return 'election/';
+          return true;
         else
-          return 'voting/'
+          return false;
       }
     },
     mounted () {
