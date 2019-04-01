@@ -26,7 +26,6 @@
       class="container">
       <div class="p-3 mb-2 bg-gradient-light text-dark">
         <nuxt/>
-
       </div>
     </main>
   </div>

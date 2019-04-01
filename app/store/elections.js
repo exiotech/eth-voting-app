@@ -4,40 +4,52 @@ import web3 from './exportWeb3'
 export const  state = () => ({
      elections: [],
      electionName: [],
+     admin: "",
   });
 
   export const getters = {
     elections: (state) => state.elections,
+    admin: (state) => state.admin,
   };
 
   export const actions = {
+    setAdmin({commit}){
+      const chairperson = ContractInstance.chairpersonContract();
+      chairperson.methods.chairperson()
+      .call()
+      .then(address => {
+        commit("SET_ADMIN", address)
+      })
+    },
     addElectionName({commit}, electionName){
       const chairperson = ContractInstance.chairpersonContract();
-      chairperson.methods.callElection(electionName).send({
-        from: '0xEE2C37b90c2B7FfB0D944f614E60BD5a2C760750',
-        gasPrice: '30000000000',
-        gas: 2000000
-      });
-      chairperson.once('electionCreated', (error, event) => {
-        web3.eth.getTransactionReceipt(event.transactionHash)
-        .then(res => {
-          if(res.status){
-            let data = {
-              id: event.returnValues._id,
-              name: event.returnValues._name,
-              election: event.returnValues._election,
-              candidateCount: 0,
-              state: 'passive'
-            };
-            if(event.returnValues._id == 1) {
-              window.localStorage.clear();
-            }
-            window.localStorage.setItem(event.returnValues._id, JSON.stringify(data));
-            commit("ADD_ELECTION", data);
-            window.$nuxt.$root.$store.$router.push(`Elections/Election/${ event.returnValues._id }`);
-            return;
-          }
+      chairperson.methods.chairperson()
+      .call()
+      .then(address => {
+        chairperson.methods.callElection(electionName).send({
+          from: address,
+          gasPrice: '30000000000',
+          gas: 2000000
         });
+        chairperson.once('electionCreated', (error, event) => {
+          web3.eth.getTransactionReceipt(event.transactionHash)
+          .then(res => {
+            if(res.status){
+
+              let data = {
+                candidateCount: 0,
+                state: 'passive'
+              };
+              if(event.returnValues._id == 1) {
+                window.localStorage.clear();
+              }
+              window.localStorage.setItem(event.returnValues._id, JSON.stringify(data));
+              window.$nuxt.$root.$store._actions["elections/addElections"][0]();
+              window.$nuxt.$root.$store.$router.push(`Elections/Election/${ event.returnValues._id }`);
+              return;
+            }
+          });
+        })
       })
       commit("ADD_ELECTION_NAME", electionName);
     },
@@ -76,5 +88,8 @@ export const  state = () => ({
     },
     ADD_ELECTION_NAME(state, electionName){
       state.electionName.push(electionName);
+    },
+    SET_ADMIN(state, address){
+      state.admin = address
     }
   }

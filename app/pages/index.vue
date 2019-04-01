@@ -1,27 +1,12 @@
 <template>
-  <section class="container">
-    <center :style="{marginTop: '5rem'}">
-      Address:
-      <br>
-      {{ coinbase }}
-    </center>
-  </section>
+  <div/>
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import Logo from '~/components/Logo.vue';
 
 export default {
-  components: {
-    Logo,
-  },
-  computed: {
-    ...mapGetters({
-      coinbase: 'web3/coinbase',
-    }),
-  },
   mounted() {
+    window.$nuxt.$root.$store.$router.push('Elections');
   },
 };
 </script>

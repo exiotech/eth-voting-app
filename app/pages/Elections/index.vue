@@ -82,11 +82,13 @@
     computed: {
       ...mapGetters({
         elections: 'elections/elections',
+        admin: 'elections/admin',
         web3: 'web3/coinbase',
+
       }),
       test: function(){
-        console.log(this.web3);
-        if(this.web3 == "0xee2c37b90c2b7ffb0d944f614e60bd5a2c760750")
+        this.setAdmin();
+        if(this.web3 == this.admin.toLowerCase())
           return true;
         else
           return false;
@@ -99,6 +101,7 @@
       ...mapActions({
         addElectionName: 'elections/addElectionName',
         addElections: 'elections/addElections',
+        setAdmin: 'elections/setAdmin',
       }),
       clearName() {
         this.name = "";
