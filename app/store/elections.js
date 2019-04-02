@@ -5,14 +5,19 @@ export const  state = () => ({
      elections: [],
      electionName: [],
      admin: "",
+     loading: false,
   });
 
   export const getters = {
     elections: (state) => state.elections,
     admin: (state) => state.admin,
+    loading: (state) => state.loading,
   };
 
   export const actions = {
+    setLoading({commit}){
+      commit("SET_LOADING", true)
+    },
     setAdmin({commit}){
       const chairperson = ContractInstance.chairpersonContract();
       chairperson.methods.chairperson()
@@ -54,6 +59,7 @@ export const  state = () => ({
       commit("ADD_ELECTION_NAME", electionName);
     },
     addElections({commit}){
+      commit("SET_LOADING", false);
       const chairperson = ContractInstance.chairpersonContract();
       let arr = [];
       (function myLoop (i = 1) {
@@ -77,8 +83,8 @@ export const  state = () => ({
       })();
       setTimeout(function(){
         commit("ADD_ELECTION", arr);
+        commit("SET_LOADING", false);
       }, 1500)
-
     }
   };
 
@@ -91,5 +97,8 @@ export const  state = () => ({
     },
     SET_ADMIN(state, address){
       state.admin = address
+    },
+    SET_LOADING(state, payload){
+      state.loading = payload;
     }
   }

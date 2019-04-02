@@ -45,25 +45,25 @@
             <th>state</th>
           </tr>
         </thead>
-        <tbody v-if="test">
+        <tbody v-if="!loading">
           <tr
             v-for="election in elections"
             :key="election.id">
             <td>{{ election.id }}</td>
-            <td><nuxt-link :to="'elections/election/' + election.id">{{ election.name }}</nuxt-link></td>
+            <td v-if="linkAdmin"><nuxt-link :to="'elections/election/' + election.id">{{ election.name }}</nuxt-link></td>
+            <td v-if="!linkAdmin"><nuxt-link :to="'elections/voting/' + election.name">{{ election.name }}</nuxt-link></td>
             <td>{{ election.candidateCount }}</td>
             <td>{{ election.state }}</td>
           </tr>
         </tbody>
-        <tbody v-else>
-          <tr
-            v-for="election in elections"
-            :key="election.id">
-            <td>{{ election.id }}</td>
-            <td><nuxt-link :to="'elections/voting/' + election.name">{{ election.name }}</nuxt-link></td>
-            <td>{{ election.candidateCount }}</td>
-            <td>{{ election.state }}</td>
-          </tr>
+        <tbody
+          v-else
+          class="text-cenetr"
+        >
+          <th class="loading">Loading...</th>
+          <th class="loading">Loading...</th>
+          <th class="loading">Loading...</th>
+          <th class="loading">Loading...</th>
         </tbody>
       </table>
     </div>
@@ -83,25 +83,27 @@
       ...mapGetters({
         elections: 'elections/elections',
         admin: 'elections/admin',
+        loading: 'elections/loading',
         web3: 'web3/coinbase',
-
       }),
-      test: function(){
+      linkAdmin: function(){
         this.setAdmin();
         if(this.web3 == this.admin.toLowerCase())
           return true;
         else
           return false;
-      }
+      },
     },
     mounted () {
       this.addElections();
+      this.setLoading();
     },
     methods: {
       ...mapActions({
         addElectionName: 'elections/addElectionName',
         addElections: 'elections/addElections',
         setAdmin: 'elections/setAdmin',
+        setLoading: 'elections/setLoading',
       }),
       clearName() {
         this.name = "";

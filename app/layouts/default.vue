@@ -1,11 +1,14 @@
 <template>
   <div>
-    <div
-      class="btn-group mr-2"
-      role="group"
-      aria-label="First group">
-
-      <nuxt-link
+    <div class="nav-bar">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <nuxt-link
+          class="btn btn-outline-primary"
+          to="/elections"
+          role="button"
+        >Elections</nuxt-link>
+      </nav>
+      <!-- <nuxt-link
         class="btn btn-outline-primary"
         to="/elections"
         role="button"
@@ -19,7 +22,7 @@
         class="btn btn-outline-primary"
         to="/elections/voting"
         role="button"
-      >voting</nuxt-link>
+      >voting</nuxt-link> -->
     </div>
     <main
       role="main"

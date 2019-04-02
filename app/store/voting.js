@@ -13,38 +13,6 @@ export const  state = () => ({
   };
 
   export const  actions = {
-    addCandidateName({commit}, payload){
-      const election = ElectionInstance.electionContract();
-      election.methods.chairperson()
-      .call()
-      .then(address => {
-        election.methods.addCandidate(payload)
-        .send({
-          from: address,
-        })
-        election.once('CandidateCreated', (error, event) => {
-          web3.eth.getTransactionReceipt(event.transactionHash)
-          .then(res => {
-            if(res.status){
-              window.$nuxt.$root.$store._actions["voting/addCandidate"][0]();
-              Object.keys(window.localStorage).forEach(function(value){
-                let data = JSON.parse(window.localStorage.getItem(value));
-                if(data.name == window.$nuxt.$root.$store.$router.history.current.params.name){
-                  election.methods.candidatesCount()
-                  .call()
-                  .then(count => {
-                    data.candidateCount = count;
-                    window.localStorage.setItem(data.id, JSON.stringify(data));
-                  })
-                  return;
-                }
-              })
-            }
-          })
-        })
-      })
-    },
-
     addCandidate({commit}){
       setTimeout(function(){
         const election = ElectionInstance.electionContract();
