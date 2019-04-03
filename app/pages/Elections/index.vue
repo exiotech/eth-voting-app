@@ -1,13 +1,21 @@
 <template>
   <div>
-    <div class="jumbotron jumbotron-fluid text-center">
+    <div class="text-center shadow-lg bg-light rounded">
       <div class="title-election">
-        <h1>Elections</h1>
-        <div class="text-right">
-          <b-button
-            v-b-modal.modalPrevent
-            variant="primary"
-          >create</b-button>
+        <div class="bg-dark rounded">
+          <div class="row">
+            <div class="text-title-election">
+              <h1>Elections</h1>
+            </div>
+            <div class="create-button">
+              <b-button
+                v-b-modal.modalPrevent
+                variant="primary">
+                create</b-button>
+            </div>
+          </div>
+        </div>
+        <div>
           <b-modal
             id="modalPrevent"
             ref="modal"
@@ -37,7 +45,7 @@
         </div>
       </div>
       <table class="table table-hover">
-        <thead>
+        <thead class="test">
           <tr>
             <th>Id</th>
             <th>name</th>

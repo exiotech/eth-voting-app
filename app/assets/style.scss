@@ -9,7 +9,14 @@
 .form-control:invalid{
   border-color: red;
 }
-
+.create-button{
+  padding-left: 23.8em;
+  margin-top: 0.6em;
+  margin-bottom: 1em;
+}
+.test{
+  font: italic small-caps bold 20px/1 cursive;
+}
 .candidate_select{
   margin-left: 17em;
   margin-right: 0;
@@ -17,7 +24,13 @@
   height: 36px;
 }
 .title-election{
+  margin-bottom: 10em;
+}
+.title-voting{
   margin-bottom: 7em;
+}
+.text-title-election{
+  padding-left: 30em;
 }
 .mx-auto{
   transform: scale(1.5);
@@ -33,4 +46,27 @@
 }
 .loading{
   color: blue;
+}
+// html,body {
+//   background-image: linear-gradient(to right, #1346EF, #1379EF);
+// }
+.bg-primary,
+.btn-primary,
+{
+  background-image: linear-gradient(to right, #373b44, #314065);
+}
+.bg-dark,
+{
+  background-image: linear-gradient(to right, #0077FF, #3C97FF);
+}
+
+// .bg-light
+// {
+//   background-image: linear-gradient(to top, #34E4FF, #167FF7);
+// }
+// .bg-success{
+//   background-image: linear-gradient(to right, #1346EF, #1379EF);
+// }
+.btn-success{
+  background-image: linear-gradient(to right, #12BA4A, #10A441);
 }

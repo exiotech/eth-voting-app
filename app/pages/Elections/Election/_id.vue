@@ -6,7 +6,7 @@
         class="btn btn-link"
         @click="linkName">goToVoting</button>
     </div>
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid shadow-lg bg-light rounded">
       <h3 class="text-center">Nomination Period</h3>
       <div class="form-group row justify-content-center">
         <p class="time-text mr-sm-3">Start time:</p>
@@ -40,7 +40,7 @@
           @click="runTimerNomenationPeriod">Submit</button>
       </div>
     </div>
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid shadow-lg bg-light rounded">
       <h3 class="text-center">Voting Period</h3>
       <div class="form-group row justify-content-center">
         <p class="time-text mr-sm-3">Start time:</p>
@@ -75,7 +75,7 @@
         >Submit</button>
       </div>
     </div>
-    <div class="jumbotron jumbotron-fluid">
+    <div class="jumbotron jumbotron-fluid shadow-lg bg-light rounded">
       <div class="text-center col-md-12">
         <input
           v-model="giveRightAddress"

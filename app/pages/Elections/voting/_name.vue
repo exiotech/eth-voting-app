@@ -1,77 +1,79 @@
 <template>
   <div>
-    <div class="row justify-content-end text-center">
-      <div class="col-12">
-        <h2 class="text-center">voting</h2>
-      </div>
-      <div>
-        <p v-if="dontVotingTime">Dont Voting Time</p>
-        <p v-else-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
-        <p v-else-if="votingTime">Voting time: {{ timerVoting }}</p>
-        <p v-else> End Voting</p>
-      </div>
-    </div>
-    <section class="container">
-      <table
-        v-if="winnerOpen"
-        class="table table-hover"
-      >
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Candidate name</th>
-            <th>Kargaxos</th>
-          </tr>
-        </thead>
-        <tbody >
-          <tr
-            v-for="candidate in candidates"
-            :key="candidate.id">
-            <td>{{ candidate.id }}</td>
-            <td>{{ candidate.name }}</td>
-            <td>{{ candidate.kargaxos }}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div
-        v-else
-        class="text-center">
-        <p>Winner Candidate</p>
-        <p>{{ winner }}</p>
-      </div>
-      <form
-        v-show="isVotingOpen"
-        class="form-group"
-        @submit.prevent="submit">
-        <div
-          v-if="votingTime"
-          v-show="isVotingOpen"
-          class="row">
-          <div class="col-6">
-            <select
-              v-model="selectedCandidateId"
-              :disabled="isLoading"
-              class="candidate_select select">
-              <option
-                v-for="candidate in candidates"
-                :value="candidate.id"
-                :key="candidate.id">
-                {{ candidate.name }}
-              </option>
-            </select>
-          </div>
-          <div class="col-6">
-            <button
-              :disabled="!selectedCandidateId || isLoading"
-              type="submit"
-              class="btn btn-dark px-4">
-              Vote
-            </button>
-          </div>
+    <div class="shadow-lg bg-light rounded">
+      <div class="row justify-content-end text-center">
+        <div class="title-voting bg-dark rounded col-12">
+          <h2 class="text-center">voting</h2>
         </div>
-      </form>
-    </section>
-    <p class="text-center mt-5">Your account: {{ coinbase }} </p>
+        <div>
+          <p v-if="dontVotingTime">Dont Voting Time</p>
+          <p v-else-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
+          <p v-else-if="votingTime">Voting time: {{ timerVoting }}</p>
+          <p v-else> End Voting</p>
+        </div>
+      </div>
+      <section class="container">
+        <table
+          v-if="winnerOpen"
+          class="table table-hover"
+        >
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Candidate name</th>
+              <th>Kargaxos</th>
+            </tr>
+          </thead>
+          <tbody >
+            <tr
+              v-for="candidate in candidates"
+              :key="candidate.id">
+              <td>{{ candidate.id }}</td>
+              <td>{{ candidate.name }}</td>
+              <td>{{ candidate.kargaxos }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div
+          v-else
+          class="text-center">
+          <p>Winner Candidate</p>
+          <p>{{ winner }}</p>
+        </div>
+        <form
+          v-show="isVotingOpen"
+          class="form-group"
+          @submit.prevent="submit">
+          <div
+            v-if="votingTime"
+            v-show="isVotingOpen"
+            class="row">
+            <div class="col-6">
+              <select
+                v-model="selectedCandidateId"
+                :disabled="isLoading"
+                class="candidate_select select">
+                <option
+                  v-for="candidate in candidates"
+                  :value="candidate.id"
+                  :key="candidate.id">
+                  {{ candidate.name }}
+                </option>
+              </select>
+            </div>
+            <div class="col-6">
+              <button
+                :disabled="!selectedCandidateId || isLoading"
+                type="submit"
+                class="btn btn-dark px-4">
+                Vote
+              </button>
+            </div>
+          </div>
+        </form>
+      </section>
+      <p class="text-center mt-5">Your account: {{ coinbase }} </p>
+    </div>
   </div>
 </template>
 
