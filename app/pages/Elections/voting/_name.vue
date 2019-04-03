@@ -5,7 +5,8 @@
         <h2 class="text-center">voting</h2>
       </div>
       <div>
-        <p v-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
+        <p v-if="dontVotingTime">Dont Voting Time</p>
+        <p v-else-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
         <p v-else-if="votingTime">Voting time: {{ timerVoting }}</p>
         <p v-else> End Voting</p>
       </div>
@@ -85,6 +86,7 @@ export default {
       isLoading: false,
       startVotingTime: false,
       votingTime: false,
+      dontVotingTime: false,
     };
   },
   computed: {
@@ -128,10 +130,13 @@ export default {
       let timeStartVoting = null;
       let timeVoting = null;
       let paramsName = this.$router.history.current.params.name;
+      let tmp = this
       Object.keys(window.localStorage).forEach(function(value){
         if(paramsName == JSON.parse(window.localStorage.getItem(value)).name){
           timeStartVoting = JSON.parse(window.localStorage.getItem(value)).votStart;
           timeVoting = JSON.parse(window.localStorage.getItem(value)).votEnd;
+          if(timeStartVoting && timeVoting)
+            tmp.dontVotingTime = false;
           return;
         }
       })
@@ -158,7 +163,7 @@ export default {
             rangeTimeVoting -= 1;
           }
           else {
-            this.timeAddCandidateEnd = false;
+            this.dontVotingTime = false;
             this.startVotingTime = true;
             this.timerVoting = this.convertTime(rangeTimeStartVoting);
             rangeTimeStartVoting -= 1;
