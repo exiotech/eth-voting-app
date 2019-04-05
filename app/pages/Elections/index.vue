@@ -7,7 +7,9 @@
             <div class="text-title-election">
               <h1>Elections</h1>
             </div>
-            <div class="create-button">
+            <div
+              v-if="linkAdmin"
+              class="create-button">
               <b-button
                 v-b-modal.modalPrevent
                 variant="primary">
@@ -45,7 +47,7 @@
         </div>
       </div>
       <table class="table table-hover">
-        <thead class="test">
+        <thead class="title-table">
           <tr>
             <th>Id</th>
             <th>name</th>
@@ -66,11 +68,10 @@
         </tbody>
         <tbody
           v-else
-          class="text-cenetr"
+          class="text-left"
         >
-          <th class="loading">Loading...</th>
-          <th class="loading">Loading...</th>
-          <th class="loading">Loading...</th>
+          <th/>
+          <th/>
           <th class="loading">Loading...</th>
         </tbody>
       </table>

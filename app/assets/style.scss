@@ -14,7 +14,7 @@
   margin-top: 0.6em;
   margin-bottom: 1em;
 }
-.test{
+.title-table{
   font: italic small-caps bold 20px/1 cursive;
 }
 .candidate_select{
@@ -28,9 +28,14 @@
 }
 .title-voting{
   margin-bottom: 7em;
+  width: 97%;
+  margin-right: 1em;
 }
 .text-title-election{
   padding-left: 30em;
+}
+.select-vote{
+  margin-left: 5em;
 }
 .mx-auto{
   transform: scale(1.5);
@@ -46,6 +51,7 @@
 }
 .loading{
   color: blue;
+  width: 35%;
 }
 // html,body {
 //   background-image: linear-gradient(to right, #1346EF, #1379EF);

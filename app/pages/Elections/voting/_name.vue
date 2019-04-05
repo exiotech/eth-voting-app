@@ -2,10 +2,10 @@
   <div>
     <div class="shadow-lg bg-light rounded">
       <div class="row justify-content-end text-center">
-        <div class="title-voting bg-dark rounded col-12">
-          <h2 class="text-center">voting</h2>
+        <div class="title-voting bg-dark rounded">
+          <h2>voting</h2>
         </div>
-        <div>
+        <div class="col-3">
           <p v-if="dontVotingTime">Dont Voting Time</p>
           <p v-else-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
           <p v-else-if="votingTime">Voting time: {{ timerVoting }}</p>
@@ -47,8 +47,8 @@
           <div
             v-if="votingTime"
             v-show="isVotingOpen"
-            class="row">
-            <div class="col-6">
+            class="select-vote row" >
+            <div>
               <select
                 v-model="selectedCandidateId"
                 :disabled="isLoading"
@@ -61,7 +61,7 @@
                 </option>
               </select>
             </div>
-            <div class="col-6">
+            <div>
               <button
                 :disabled="!selectedCandidateId || isLoading"
                 type="submit"
@@ -88,7 +88,7 @@ export default {
       isLoading: false,
       startVotingTime: false,
       votingTime: false,
-      dontVotingTime: false,
+      dontVotingTime: true,
     };
   },
   computed: {
@@ -137,7 +137,7 @@ export default {
         if(paramsName == JSON.parse(window.localStorage.getItem(value)).name){
           timeStartVoting = JSON.parse(window.localStorage.getItem(value)).votStart;
           timeVoting = JSON.parse(window.localStorage.getItem(value)).votEnd;
-          if(timeStartVoting && timeVoting)
+          if(timeVoting - timeStartVoting > 0)
             tmp.dontVotingTime = false;
           return;
         }
