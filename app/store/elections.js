@@ -43,7 +43,7 @@ export const  state = () => ({
 
               let data = {
                 candidateCount: 0,
-                state: 'passive'
+                state: 'wait to start'
               };
               if(event.returnValues._id == 1) {
                 window.localStorage.clear();

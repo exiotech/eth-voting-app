@@ -9,11 +9,6 @@
 .form-control:invalid{
   border-color: red;
 }
-.create-button{
-  padding-left: 23.8em;
-  margin-top: 0.6em;
-  margin-bottom: 1em;
-}
 .title-table{
   font: italic small-caps bold 20px/1 cursive;
 }
@@ -24,18 +19,12 @@
   height: 36px;
 }
 .title-election{
-  margin-bottom: 10em;
+  margin-bottom: 4em;
+  margin-top: 4em;
 }
 .title-voting{
-  margin-bottom: 7em;
-  width: 97%;
-  margin-right: 1em;
-}
-.text-title-election{
-  padding-left: 30em;
-}
-.select-vote{
-  margin-left: 5em;
+  margin-bottom: 2em;
+  margin-top: 2em;
 }
 .mx-auto{
   transform: scale(1.5);
@@ -43,19 +32,12 @@
   margin: 20px auto;
   width: 70%;
 }
-.time-text{
-  padding-top: 0.3em;
-}
 .nav-bar{
   width: 100%;
 }
 .loading{
   color: blue;
-  width: 35%;
 }
-// html,body {
-//   background-image: linear-gradient(to right, #1346EF, #1379EF);
-// }
 .bg-primary,
 .btn-primary,
 {
@@ -64,15 +46,4 @@
 .bg-dark,
 {
   background-image: linear-gradient(to right, #0077FF, #3C97FF);
-}
-
-// .bg-light
-// {
-//   background-image: linear-gradient(to top, #34E4FF, #167FF7);
-// }
-// .bg-success{
-//   background-image: linear-gradient(to right, #1346EF, #1379EF);
-// }
-.btn-success{
-  background-image: linear-gradient(to right, #12BA4A, #10A441);
 }

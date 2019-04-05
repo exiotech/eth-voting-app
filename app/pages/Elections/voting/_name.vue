@@ -1,11 +1,9 @@
 <template>
   <div>
     <div class="shadow-lg bg-light rounded">
-      <div class="row justify-content-end text-center">
-        <div class="title-voting bg-dark rounded">
-          <h2>voting</h2>
-        </div>
-        <div class="col-3">
+      <div class="justify-content-end text-center">
+        <h2 class="title-voting text-center bg-dark rounded">voting</h2>
+        <div class="text-right col-12">
           <p v-if="dontVotingTime">Dont Voting Time</p>
           <p v-else-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
           <p v-else-if="votingTime">Voting time: {{ timerVoting }}</p>
@@ -17,14 +15,14 @@
           v-if="winnerOpen"
           class="table table-hover"
         >
-          <thead>
+          <thead class="title-table">
             <tr>
-              <th>#</th>
+              <th>Id</th>
               <th>Candidate name</th>
               <th>Kargaxos</th>
             </tr>
           </thead>
-          <tbody >
+          <tbody v-if="!loading">
             <tr
               v-for="candidate in candidates"
               :key="candidate.id">
@@ -32,6 +30,10 @@
               <td>{{ candidate.name }}</td>
               <td>{{ candidate.kargaxos }}</td>
             </tr>
+          </tbody>
+          <tbody v-else>
+            <th/>
+            <th class="loading text-center col-1">Loading...</th>
           </tbody>
         </table>
         <div
@@ -47,8 +49,8 @@
           <div
             v-if="votingTime"
             v-show="isVotingOpen"
-            class="select-vote row" >
-            <div>
+            class="row">
+            <div class="text-right col-7">
               <select
                 v-model="selectedCandidateId"
                 :disabled="isLoading"
@@ -61,14 +63,12 @@
                 </option>
               </select>
             </div>
-            <div>
-              <button
-                :disabled="!selectedCandidateId || isLoading"
-                type="submit"
-                class="btn btn-dark px-4">
-                Vote
-              </button>
-            </div>
+            <button
+              :disabled="!selectedCandidateId || isLoading"
+              type="submit"
+              class="btn btn-dark px-4">
+              Vote
+            </button>
           </div>
         </form>
       </section>
@@ -95,6 +95,7 @@ export default {
     ...mapGetters({
       candidates: 'voting/candidates',
       isVotingOpen: 'voting/isOpen',
+      loading: 'voting/loading',
       coinbase: 'web3/coinbase',
       winner: 'winnerName/winnerCandidate',
       winnerOpen: 'winnerName/winnerOpen',
@@ -104,10 +105,12 @@ export default {
     this.addCandidate();
     this.votingTimer();
     this.winnerName();
+    this.setLoading();
   },
   methods: {
     ...mapActions({
       addCandidate: 'voting/addCandidate',
+      setLoading: 'voting/setLoading',
       vote: 'voting/vote',
       winnerName: 'winnerName/winnerName'
     }),

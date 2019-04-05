@@ -5,15 +5,21 @@ export const  state = () => ({
     candidates: [],
     candidateID: 0,
     isOpen: true,
+    loading: false,
   });
 
   export const getters = {
     candidates: (state) => state.candidates,
     isOpen: (state) => state.isOpen,
+    loading: (state) => state.loading,
   };
 
   export const  actions = {
+    setLoading({commit}){
+      commit("SET_LOADING", true)
+    },
     addCandidate({commit}){
+      commit("SET_LOADING", false);
       setTimeout(function(){
         const election = ElectionInstance.electionContract();
         let arr = [];
@@ -32,6 +38,7 @@ export const  state = () => ({
         })();
         setTimeout(function(){
           commit("ADD_CANDIDATE", arr);
+          commit("SET_LOADING", false);
         }, 1000)
       }, 1000);
     },
@@ -60,5 +67,8 @@ export const  state = () => ({
 
     SET_VOTE(state, candidateID){
       state.candidateID = candidateID;
+    },
+    SET_LOADING(state, payload){
+      state.loading = payload;
     }
   };

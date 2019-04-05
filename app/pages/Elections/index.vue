@@ -4,14 +4,13 @@
       <div class="title-election">
         <div class="bg-dark rounded">
           <div class="row">
-            <div class="text-title-election">
+            <div class="text-right col-7">
               <h1>Elections</h1>
             </div>
-            <div
-              v-if="linkAdmin"
-              class="create-button">
+            <div class="text-right col-5">
               <b-button
                 v-b-modal.modalPrevent
+                class="px-7"
                 variant="primary">
                 create</b-button>
             </div>
@@ -66,13 +65,10 @@
             <td>{{ election.state }}</td>
           </tr>
         </tbody>
-        <tbody
-          v-else
-          class="text-left"
-        >
+        <tbody v-else>
           <th/>
           <th/>
-          <th class="loading">Loading...</th>
+          <th class="loading text-left">Loading...</th>
         </tbody>
       </table>
     </div>
@@ -106,6 +102,7 @@
     mounted () {
       this.addElections();
       this.setLoading();
+      this.electionState();
     },
     methods: {
       ...mapActions({
@@ -133,26 +130,26 @@
       },
       handleCancel(){
         this.$refs.modal.hide();
+      },
+      electionState(){
+        setInterval(() => {
+          let tmp = this;
+          Object.keys(window.localStorage).forEach(function(value){
+            let data = JSON.parse(window.localStorage.getItem(value));
+            let realTime = Math.floor(new Date().getTime()/1000.0);
+            if( realTime >= data.votStart && realTime <= data.votEnd && data.state != "active"){
+              data.state = "active";
+              window.localStorage.setItem(data.id, JSON.stringify(data));
+              tmp.addElections();
+            }
+            if(realTime >= data.votEnd && data.state != "end voting"){
+              data.state = "end voting";
+              window.localStorage.setItem(data.id, JSON.stringify(data));
+              tmp.addElections();
+            }
+          })
+        },1000)
       }
-      // test(){
-      //   let interval = setInterval(() => {
-      //     console.log('*******');
-      //     Object.keys(window.localStorage).forEach(function(value){
-      //       let data = JSON.parse(window.localStorage.getItem(value));
-      //       if(Math.floor(new Date().getTime()/1000.0) == data.votStart){
-      //         console.log('+++++');
-      //         data.state = "active";
-      //         window.localStorage.setItem(data.id, JSON.stringify(data));
-      //       }
-      //       if(Math.floor(new Date().getTime()/1000.0) == data.votEnd){
-      //         console.log('-----');
-      //         data.state = "EndVoting";
-      //         window.localStorage.setItem(data.id, JSON.stringify(data));
-      //         clearInterval(interval);
-      //       }
-      //     })
-      //   },1000)
-      // }
     },
 
   }
