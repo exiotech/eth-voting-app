@@ -70,7 +70,12 @@ export const  state = () => ({
             i = res.id;
             if(i != 0){
               let data = JSON.parse(window.localStorage.getItem(i + ''));
-              window.localStorage.removeItem(i+'');
+              window.localStorage.removeItem(i + '');
+              if(!data){
+                data = {};
+                data.candidateCount = 0;
+                data.state = 'wait to start'
+              }
               data.id = res.id;
               data.name = res.name;
               data.election = res.election;

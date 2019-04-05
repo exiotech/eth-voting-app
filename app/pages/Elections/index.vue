@@ -7,7 +7,7 @@
             <div class="text-right col-7">
               <h1>Elections</h1>
             </div>
-            <div class="text-right col-5">
+            <div class="create-button text-right col-5">
               <b-button
                 v-b-modal.modalPrevent
                 class="px-7"
@@ -142,8 +142,8 @@
               window.localStorage.setItem(data.id, JSON.stringify(data));
               tmp.addElections();
             }
-            if(realTime >= data.votEnd && data.state != "end voting"){
-              data.state = "end voting";
+            if(realTime >= data.votEnd && data.state != "is over"){
+              data.state = "is over";
               window.localStorage.setItem(data.id, JSON.stringify(data));
               tmp.addElections();
             }
