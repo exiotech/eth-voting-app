@@ -12,6 +12,7 @@ export const getters = {
 
 export const actions = {
   winnerName({commit}){
+    commit('WINNER_OPEN', true);
     setTimeout(function(){
       const election = ElectionInstance.electionContract();
       election.methods.winnerName()
@@ -21,6 +22,7 @@ export const actions = {
           if(election._address == JSON.parse(window.localStorage.getItem(value)).election){
             if(JSON.parse(window.localStorage.getItem(value)).votEnd <= Math.floor(new Date().getTime()/1000.0)){
               commit('WINNER_NAME', res);
+              commit('WINNER_OPEN', false);
             }
           }
         })
@@ -30,8 +32,10 @@ export const actions = {
 };
 
 export const mutations = {
+  WINNER_OPEN(state, payload){
+    state.winnerOpen = payload
+  },
   WINNER_NAME(state, payload){
-    state.winnerOpen = false
     state.winnerCandidate = payload
   }
 }

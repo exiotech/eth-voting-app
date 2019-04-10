@@ -1,6 +1,10 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-vue/src/index.scss";
 
+.jumbotron {
+    padding: 1.8rem 2rem;
+    margin-bottom: 1rem;
+}
 .form-control {
   margin-left: 0.1em;
   width: 100px;

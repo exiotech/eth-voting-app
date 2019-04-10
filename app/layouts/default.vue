@@ -8,8 +8,10 @@
     <main
       role="main"
       class="container">
-      <div class="p-3 mb-2 bg-gradient-light text-dark">
-        <nuxt/>
+      <div class="row">
+        <div class="col-10 offset-1 bg-gradient-light text-dark">
+          <nuxt/>
+        </div>
       </div>
     </main>
   </div>

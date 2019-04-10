@@ -50,7 +50,7 @@
             v-if="votingTime"
             v-show="isVotingOpen"
             class="row">
-            <div class="text-right col-7">
+            <div class="row col-10 offset">
               <select
                 v-model="selectedCandidateId"
                 :disabled="isLoading"
@@ -62,13 +62,13 @@
                   {{ candidate.name }}
                 </option>
               </select>
+              <button
+                :disabled="!selectedCandidateId || isLoading"
+                type="submit"
+                class="btn btn-dark px-4">
+                Vote
+              </button>
             </div>
-            <button
-              :disabled="!selectedCandidateId || isLoading"
-              type="submit"
-              class="btn btn-dark px-4">
-              Vote
-            </button>
           </div>
         </form>
       </section>
