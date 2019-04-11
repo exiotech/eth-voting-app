@@ -7,7 +7,9 @@
             <div class="text-right col-7">
               <h1>Elections</h1>
             </div>
-            <div class="create-button text-right col-5">
+            <div
+              v-if="linkAdmin"
+              class="create-button text-right col-5">
               <b-button
                 v-b-modal.modalPrevent
                 class="px-7"
