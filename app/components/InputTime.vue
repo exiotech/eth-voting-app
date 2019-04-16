@@ -7,7 +7,9 @@
           class="custom-select  mr-sm-2"
           @change="onChangeYearsMonth($event)"
         >
-          <option selected>{{ new Date().getFullYear() }}</option>
+          <option
+            selected
+            disabled>{{ new Date().getFullYear() }}</option>
           <option
             v-for="year in years"
             :key="year"
@@ -23,7 +25,9 @@
           class="custom-select mr-sm-2"
           @change="onChangeMonthsDay($event)"
         >
-          <option selected>{{ monthsShort[new Date().getMonth()] }}</option>
+          <option
+            selected
+            disabled>{{ monthsShort[new Date().getMonth()] }}</option>
           <option
             v-for="month in monthsShort"
             :key="month"
@@ -40,7 +44,9 @@
             class="custom-select mr-sm-2"
             @change="onChangeDays($event)"
           >
-            <option selected>{{ new Date().getDate() }}</option>
+            <option
+              selected
+              disabled>{{ new Date().getDate() }}</option>
             <option
               v-for="day in daysInMonth"
               :key="day"
@@ -57,7 +63,9 @@
           class="custom-select mr-sm-2"
           @change="onChangeHours($event)"
         >
-          <option selected>{{ hour }}</option>
+          <option
+            selected
+            disabled>{{ hour }}</option>
           <option
             v-for="hour in hours"
             :key="hour"
@@ -73,7 +81,9 @@
           class="custom-select mr-sm-2"
           @change="onChangeMinutes($event)"
         >
-          <option selected>{{ minute }}</option>
+          <option
+            selected
+            disabled>{{ minute }}</option>
           <option
             v-for="minute in minutes"
             :key="minute"

@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="nav-bar">
-      <nav class="navbar navbar-expand-lg navbar-dark shadow-lg bg-primary rounded">
+      <nav class="row navbar navbar-expand-lg navbar-dark shadow-lg bg-dark rounded">
         <nuxt-link to="/elections">Elections</nuxt-link>
       </nav>
     </div>

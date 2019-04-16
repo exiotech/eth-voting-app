@@ -89,7 +89,6 @@
         <b-button
           v-b-modal.modalPrevent
           v-if="timeAddCandidate"
-          variant="primary"
           class="btn btn-success btn-clock"
         >Add Candidate</b-button>
         <b-modal

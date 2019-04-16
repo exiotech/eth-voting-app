@@ -2,7 +2,7 @@
   <div>
     <div class="text-center shadow-lg bg-light rounded">
       <div class="title-election">
-        <div class="bg-dark rounded">
+        <div class="bg-success rounded">
           <div class="row">
             <div class="text-right col-7">
               <h1>Elections</h1>
@@ -12,8 +12,7 @@
               class="create-button text-right col-5">
               <b-button
                 v-b-modal.modalPrevent
-                class="px-7"
-                variant="primary">
+                class="px-7 btn btn-primary">
                 create</b-button>
             </div>
           </div>

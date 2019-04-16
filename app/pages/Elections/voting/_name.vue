@@ -2,12 +2,12 @@
   <div>
     <div class="shadow-lg bg-light rounded">
       <div class="justify-content-end text-center">
-        <h2 class="title-voting text-center bg-dark rounded">voting</h2>
+        <h2 class="title-voting text-center bg-success rounded">voting</h2>
         <div class="text-right col-12">
           <p v-if="dontVotingTime">Dont Voting Time</p>
           <p v-else-if="startVotingTime">Start time voting: {{ timerVoting }}</p>
           <p v-else-if="votingTime">Voting time: {{ timerVoting }}</p>
-          <p v-else> End Voting</p>
+          <!-- <p v-else> End Voting</p> -->
         </div>
       </div>
       <section class="container">
@@ -54,7 +54,7 @@
               <select
                 v-model="selectedCandidateId"
                 :disabled="isLoading"
-                class="candidate_select select">
+                class="custom-select candidate_select select">
                 <option
                   v-for="candidate in candidates"
                   :value="candidate.id"
